@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Materialy szkoleniowe — UiPath Dzien 4</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --navy: #1e4d8c; --blue: #5b9bd5; --light: #eaf3fb; --border: #cde0f5; --text: #222; --muted: #666; --sidebar-w: 270px; }
+body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px; line-height: 1.65; color: var(--text); background: #f4f8fd; display: flex; }
+#sidebar { width: var(--sidebar-w); min-height: 100vh; background: #0f2744; position: fixed; top: 0; left: 0; bottom: 0; overflow-y: auto; display: flex; flex-direction: column; z-index: 50; }
+.sidebar-header { padding: 20px 16px 14px; border-bottom: 1px solid #1e4d8c; }
+.sidebar-header .title { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.3; }
+.sidebar-header .sub { font-size: 11px; color: #5b9bd5; margin-top: 3px; }
+.sidebar-search { padding: 10px 12px; border-bottom: 1px solid #1a3a60; }
+.sidebar-search input { width: 100%; background: #1a3a60; border: 1px solid #2a5a90; border-radius: 4px; padding: 6px 10px; color: #d0e8f8; font-size: 12px; outline: none; }
+.sidebar-search input::placeholder { color: #5b7a9a; }
+.sidebar-search input:focus { border-color: #5b9bd5; }
+nav { flex: 1; padding: 8px 0 20px; }
+.nav-day { padding: 10px 16px 4px; font-size: 10px; font-weight: 700; color: #5b9bd5; text-transform: uppercase; letter-spacing: 1.5px; }
+.nav-module { padding: 7px 16px 3px; font-size: 11px; font-weight: 700; color: #7fb3e0; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 4px; }
+.nav-item { display: block; padding: 6px 16px 6px 24px; font-size: 12.5px; color: #a0c0e0; text-decoration: none; border-left: 3px solid transparent; transition: all 0.12s; cursor: pointer; line-height: 1.35; }
+.nav-item:hover { color: #fff; background: rgba(91,155,213,0.1); border-left-color: #5b9bd5; }
+.nav-item.active { color: #fff; background: rgba(91,155,213,0.18); border-left-color: #5b9bd5; font-weight: 600; }
+.nav-item.exercise { padding-left: 34px; font-size: 12px; }
+#main { margin-left: var(--sidebar-w); flex: 1; padding: 32px 40px 60px; max-width: 860px; }
+.section { margin-bottom: 48px; }
+.day-divider { background: var(--navy); color: #fff; padding: 14px 22px; border-radius: 6px; margin-bottom: 28px; font-size: 17px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.module-heading { font-size: 16px; font-weight: 700; color: var(--navy); border-left: 4px solid var(--blue); padding-left: 12px; margin-bottom: 14px; }
+.exercise-card { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 24px; background: #fff; }
+.exercise-title { background: var(--blue); color: #fff; font-weight: 700; font-size: 13.5px; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; }
+.exercise-title .goal { font-size: 11.5px; font-weight: 400; color: #d0e8f8; margin-top: 2px; }
+.exercise-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 14px; }
+.theory-box { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 16px 18px; margin-bottom: 20px; }
+.label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--navy); margin-bottom: 6px; }
+.steps { padding-left: 20px; }
+.steps li { margin-bottom: 5px; font-size: 13.5px; }
+.steps li::marker { color: var(--blue); font-weight: 700; }
+.bullets { padding-left: 18px; }
+.bullets li { margin-bottom: 4px; font-size: 13.5px; }
+.edu-list { display: flex; flex-direction: column; gap: 5px; }
+.edu-item { background: var(--light); border-left: 3px solid var(--blue); padding: 6px 12px; border-radius: 0 4px 4px 0; font-size: 13px; color: #1a3a60; }
+.var-table { width: 100%; border-collapse: collapse; font-size: 12.5px; font-family: 'Consolas', 'Courier New', monospace; }
+.var-table th { background: var(--navy); color: #fff; padding: 5px 10px; text-align: left; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif; font-size: 11px; }
+.var-table tr:nth-child(even) { background: var(--light); }
+.var-table td { padding: 5px 10px; border-bottom: 1px solid var(--border); }
+table.gen { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.gen th { background: var(--navy); color: #fff; padding: 7px 12px; text-align: left; font-weight: 600; }
+table.gen tr:nth-child(even) { background: var(--light); }
+table.gen td { padding: 6px 12px; border-bottom: 1px solid var(--border); }
+code { background: var(--light); color: var(--navy); padding: 1px 5px; border-radius: 3px; font-family: 'Consolas', 'Courier New', monospace; font-size: 12px; border: 1px solid var(--border); }
+pre { background: #f0f6ff; border: 1px solid var(--border); border-radius: 5px; padding: 12px 14px; font-family: 'Consolas', 'Courier New', monospace; font-size: 12.5px; color: var(--navy); white-space: pre-wrap; word-break: break-word; }
+.tip { background: #e8f4fd; border-left: 3px solid var(--blue); padding: 9px 13px; border-radius: 0 5px 5px 0; font-size: 13px; color: #1a3a60; }
+.warn { background: #fff8e1; border-left: 3px solid #f9a825; padding: 9px 13px; border-radius: 0 5px 5px 0; font-size: 13px; color: #5a4000; }
+.warn strong, .tip strong { color: inherit; font-weight: 700; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.badge { display: inline-block; background: var(--blue); color: #fff; font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 10px; vertical-align: middle; margin-right: 3px; }
+.badge.green { background: #2e7d32; }
+.badge.red { background: #c62828; }
+.badge.orange { background: #e65100; }
+strong { color: var(--navy); }
+.theory-heading { font-size: 13px; font-weight: 700; color: var(--navy); margin: 16px 0 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+.info { background: #e8f5e9; border-left: 3px solid #2e7d32; padding: 9px 13px; border-radius: 0 5px 5px 0; font-size: 13px; color: #1b5e20; }
+/* Header */
+.material-header { display: flex; align-items: center; gap: 24px; border-bottom: 3px solid var(--blue); padding-bottom: 18px; margin-bottom: 28px; }
+.material-header img { height: 64px; width: auto; flex-shrink: 0; }
+.material-header-text h1 { font-size: 20px; color: var(--navy); font-weight: 700; margin-bottom: 2px; }
+.material-header-text .subtitle { font-size: 13px; color: var(--blue); font-weight: 600; }
+.material-header-text .subtitle-small { font-size: 11px; color: #999; margin-top: 2px; }
+/* Footer */
+.material-footer { text-align: center; font-size: 12px; color: #999; border-top: 2px solid var(--light); margin-top: 40px; padding-top: 16px; }
+.material-footer strong { color: var(--navy); }
+
+@page { margin: 10mm 0 10mm 0; }
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+  body { background: #fff; }
+  #sidebar { display: none; }
+  #main { margin-left: 0; padding: 20px 30px; max-width: 100%; }
+  .material-header img { height: 50px; }
+  .exercise-card, table.gen, .var-table, pre, .tip, .warn, .info, .edu-item { page-break-inside: avoid; break-inside: avoid; }
+  .module-heading, .theory-heading, .day-divider, .label { page-break-after: avoid; break-after: avoid; }
+  .theory-box { page-break-before: auto; break-before: auto; }
+  .material-footer { page-break-before: avoid; break-before: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<aside id="sidebar">
+  <div class="sidebar-header">
+    <div class="title">Materialy szkoleniowe — UiPath Dzien 4</div>
+    <div class="sub">Szkolenie UiPath | Materialy dla uczestnika</div>
+  </div>
+  <div class="sidebar-search">
+    <input type="text" placeholder="Szukaj w materialach..." oninput="filterNav(this.value)">
+  </div>
+  <nav>
+    <div class="nav-day">Dzien 4 — Materialy szkoleniowe</div>
+
+    <div class="nav-module">Modul 1 — Dictionary</div>
+    <a class="nav-item" href="#m1-czym-jest-dictionary">Czym jest Dictionary?</a>
+    <a class="nav-item" href="#m1-dictionary-vs-datatable">Dictionary vs DataTable</a>
+    <a class="nav-item" href="#m1-zlozonosc-obliczeniowa">Zlozonosc obliczeniowa</a>
+    <a class="nav-item" href="#m1-inicjalizacja-operacje">Inicjalizacja i operacje</a>
+    <a class="nav-item" href="#m1-typowe-pulapki">Typowe pulapki</a>
+
+    <div class="nav-module">Cwiczenia — Modul 1</div>
+    <a class="nav-item exercise" href="#cw-kursy-walut">Cw. — Kursy walut NBP</a>
+
+    <div class="nav-module">Modul 2 — Rozbudowane State Machine</div>
+    <a class="nav-item" href="#m2-be-vs-se">BusinessRule vs SystemException</a>
+    <a class="nav-item" href="#m2-stany-procesu">Stany procesu</a>
+    <a class="nav-item" href="#m2-kluczowe-zmienne">Kluczowe zmienne</a>
+    <a class="nav-item" href="#m2-logika-stanow">Logika stanow</a>
+
+    <div class="nav-module">Cwiczenia — Modul 2</div>
+    <a class="nav-item exercise" href="#cw-state-machine">Cw. — Rozbudowane State Machine</a>
+
+    <div class="nav-module">Modul 3 — REFramework</div>
+    <a class="nav-item" href="#m3-dlaczego-reframework">Dlaczego REFramework?</a>
+    <a class="nav-item" href="#m3-out-of-the-box">Co zapewnia out of the box</a>
+    <a class="nav-item" href="#m3-struktura-folderow">Struktura folderow</a>
+    <a class="nav-item" href="#m3-stany-reframework">Stany REFramework</a>
+    <a class="nav-item" href="#m3-config-xlsx">Config.xlsx</a>
+    <a class="nav-item" href="#m3-co-edytuje-programista">Co edytuje programista</a>
+    <a class="nav-item" href="#m3-credential-manager">Windows Credential Manager</a>
+
+    <div class="nav-module">Modul 4a — Dispatcher</div>
+    <a class="nav-item exercise" href="#cw-dispatcher">Cw. — Dispatcher do kolejki</a>
+
+    <div class="nav-module">Modul 4b — REFramework Performer</div>
+    <a class="nav-item exercise" href="#cw-performer">Cw. — Performer REFramework</a>
+
+    <div class="nav-module">Przydatne</div>
+    <a class="nav-item" href="#debugowanie">Debugowanie</a>
+    <a class="nav-item" href="#typowe-problemy">Typowe problemy</a>
+  </nav>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<div id="main">
+
+  <!-- HEADER -->
+  <div class="material-header">
+    <img src="logo.png" alt="Robotivity logo">
+    <div class="material-header-text">
+      <h1>Materialy szkoleniowe — UiPath Dzien 4</h1>
+      <div class="subtitle">Autoryzowany Partner UiPath</div>
+      <div class="subtitle-small">info@robotivity.pl &nbsp;&middot;&nbsp; www.Robotivity.pl &nbsp;&middot;&nbsp; tel.: +48 690 020 576</div>
+    </div>
+  </div>
+
+  <!-- DAY DIVIDER -->
+  <div class="day-divider">Dzien 4 — Dictionary, Rozbudowane State Machine, REFramework</div>
+
+  <!-- =============================== MODULE 1 =============================== -->
+
+  <div class="section" id="m1-czym-jest-dictionary">
+    <h2 class="module-heading">Modul 1 — Dictionary</h2>
+
+    <div class="theory-box">
+      <div class="label">Czym jest Dictionary?</div>
+      <p>Slownik (Dictionary) to kolekcja par <strong>klucz-wartosc</strong>. Kazdy klucz jest unikalny — nie moga istniec dwa elementy z tym samym kluczem. Najprosciej myslec o nim jak o encyklopedii: szukasz hasla (klucz) i dostajesz definicje (wartosc).</p>
+
+      <div class="tip" style="margin-top: 12px;">
+        <strong>Przypomnienie z Dnia 1-2:</strong> Na Dniu 1 omowilismy podstawy kolekcji (Array, List, Dictionary). Teraz pokazemy praktyczne zastosowanie Dictionary w realnym scenariuszu — mapowanie kursow walut.
+      </div>
+
+      <div class="theory-heading">W UiPath najczesciej spotykane typy:</div>
+      <ul class="bullets">
+        <li><code>Dictionary(Of String, String)</code> — klucz i wartosc to tekst (np. kod waluty &rarr; kurs)</li>
+        <li><code>Dictionary(Of String, Object)</code> — klucz to tekst, wartosc to dowolny typ (tak dziala Config w REFramework)</li>
+        <li><code>Dictionary(Of String, Int32)</code> — klucz to tekst, wartosc to liczba (np. licznik kategorii)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Dictionary vs DataTable -->
+  <div class="section" id="m1-dictionary-vs-datatable">
+    <div class="theory-box">
+      <div class="label">Dictionary vs DataTable — kiedy co wybrac?</div>
+      <table class="gen">
+        <tr>
+          <th>Kryterium</th>
+          <th>Dictionary</th>
+          <th>DataTable</th>
+        </tr>
+        <tr>
+          <td><strong>Struktura</strong></td>
+          <td>Klucz &rarr; Wartosc (1:1)</td>
+          <td>Wiersze x Kolumny (tabela)</td>
+        </tr>
+        <tr>
+          <td><strong>Wyszukiwanie</strong></td>
+          <td>Blyskawiczne po kluczu (O(1))</td>
+          <td>Wymaga iteracji po wierszach (O(n)) lub LINQ</td>
+        </tr>
+        <tr>
+          <td><strong>Kiedy uzyc</strong></td>
+          <td>Mapowanie (kod &rarr; nazwa), konfiguracja, cache</td>
+          <td>Dane tabelaryczne, raporty, import/eksport Excel</td>
+        </tr>
+        <tr>
+          <td><strong>Przyklad</strong></td>
+          <td>Kod waluty &rarr; kurs</td>
+          <td>Lista transakcji z wieloma kolumnami</td>
+        </tr>
+        <tr>
+          <td><strong>Sortowanie</strong></td>
+          <td>Brak gwarancji kolejnosci</td>
+          <td>Zachowuje kolejnosc wierszy</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Zlozonosc obliczeniowa -->
+  <div class="section" id="m1-zlozonosc-obliczeniowa">
+    <div class="theory-box">
+      <div class="label">Zlozonosc obliczeniowa — dlaczego Dictionary jest szybszy?</div>
+      <p>Gdy masz 10 000 walut w DataTable i szukasz kursu EUR, musisz przejsc potencjalnie przez wszystkie 10 000 wierszy (w najgorszym przypadku). To zajmuje czas proporcjonalny do rozmiaru tabeli.</p>
+      <p style="margin-top: 8px;">Dictionary uzywa techniki zwanej "haszowaniem" — zamienia klucz na liczbe i od razu wie, w ktorym "schowku" szukac. Niezaleznie od tego czy masz 100 czy 10 000 elementow, czas wyszukiwania jest staly (<strong>O(1)</strong>).</p>
+      <div class="tip" style="margin-top: 12px;">
+        <strong>W praktyce:</strong> jesli musisz wielokrotnie wyszukiwac wartosc po kluczu (np. kurs waluty, tlumaczenie kodu na nazwe), Dictionary bedzie <strong>znacznie szybszy</strong> niz iterowanie po DataTable.
+      </div>
+    </div>
+  </div>
+
+  <!-- Inicjalizacja i operacje -->
+  <div class="section" id="m1-inicjalizacja-operacje">
+    <div class="theory-box">
+      <div class="label">Inicjalizacja</div>
+      <pre>' W Assign:
+dict_waluty = New Dictionary(Of String, String)</pre>
+
+      <div class="warn" style="margin-top: 12px;">
+        <strong>Wazne:</strong> Oprocz stworzenia zmiennej w Data Manager i ustawienia typu, trzeba jeszcze napisac komende <code>New Dictionary(Of String, String)</code> w Assign — inaczej zmienna bedzie <code>Nothing</code> i kazda operacja rzuci <code>NullReferenceException</code>!
+      </div>
+
+      <div class="theory-heading">Operacje na Dictionary</div>
+      <table class="gen">
+        <tr>
+          <th>Operacja</th>
+          <th>Wyrazenie VB.NET</th>
+          <th>Opis</th>
+        </tr>
+        <tr>
+          <td>Dodaj/Ustaw wartosc</td>
+          <td><code>dict("klucz") = "wartosc"</code></td>
+          <td>Dodaje lub nadpisuje</td>
+        </tr>
+        <tr>
+          <td>Pobierz wartosc</td>
+          <td><code>dict("klucz")</code></td>
+          <td>Rzuca wyjatek jesli klucz nie istnieje</td>
+        </tr>
+        <tr>
+          <td>Sprawdz klucz</td>
+          <td><code>dict.ContainsKey("klucz")</code></td>
+          <td>Zwraca Boolean</td>
+        </tr>
+        <tr>
+          <td>Liczba elementow</td>
+          <td><code>dict.Count</code></td>
+          <td>Int32</td>
+        </tr>
+        <tr>
+          <td>Usun element</td>
+          <td><code>dict.Remove("klucz")</code></td>
+          <td>Zwraca Boolean</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Typowe pulapki -->
+  <div class="section" id="m1-typowe-pulapki">
+    <div class="theory-box">
+      <div class="label">Typowe pulapki przy pracy z Dictionary</div>
+
+      <div class="theory-heading">1. KeyNotFoundException</div>
+      <p>Proba pobrania wartosci kluczem, ktory nie istnieje:</p>
+      <pre>' ZLE — rzuci wyjatek jesli "GBP" nie istnieje:
+str_kurs = dict_waluty("GBP")
+
+' DOBRE — najpierw sprawdz:
+If dict_waluty.ContainsKey("GBP") Then
+    str_kurs = dict_waluty("GBP")
+End If</pre>
+
+      <div class="theory-heading">2. Case-sensitivity kluczy</div>
+      <p>Domyslnie Dictionary rozroznia wielkosc liter:</p>
+      <pre>dict_waluty("EUR") = "4.55"
+dict_waluty("eur")  ' &rarr; KeyNotFoundException! "eur" &ne; "EUR"</pre>
+      <div class="tip" style="margin-top: 8px;">
+        <strong>Rozwiazanie:</strong> przy dodawaniu i pobieraniu zawsze stosuj <code>.ToUpper</code> lub <code>.ToLower</code> na kluczu.
+      </div>
+
+      <div class="theory-heading">3. NullReferenceException</div>
+      <p>Dictionary nie zostalo zainicjalizowane:</p>
+      <pre>' Stworzenie zmiennej w Data Manager to za malo!
+' Trzeba jeszcze:
+dict_waluty = New Dictionary(Of String, String)</pre>
+    </div>
+  </div>
+
+  <!-- =============================== CWICZENIA MODUL 1 =============================== -->
+
+  <div class="section" id="cw-kursy-walut">
+    <h2 class="module-heading">Cwiczenia — Modul 1</h2>
+
+    <div class="exercise-card">
+      <div class="exercise-title">
+        <div>
+          Cwiczenie — Kursy walut NBP &rarr; Dictionary
+          <div class="goal">Cel: Otworz strone NBP z kursami walut, pobierz tabele (Table Extraction), zapisz do Excela, przypisz do Dictionary i wyswietl kurs Euro.</div>
+        </div>
+      </div>
+      <div class="exercise-body">
+        <div class="label">Czego sie nauczysz</div>
+        <div class="edu-list">
+          <div class="edu-item"><code>Extract Table Data</code> — scrapowanie tabel ze stron www</div>
+          <div class="edu-item">Inicjalizacja Dictionary — MUSI byc <code>New Dictionary(Of String, String)</code> w Assign</div>
+          <div class="edu-item"><code>dict(klucz) = wartosc</code> — jednoczesnie dodaje i nadpisuje</div>
+          <div class="edu-item">Dostep do wartosci: <code>dict_waluty("1 EUR").ToString</code></div>
+          <div class="edu-item">Klasyczny pattern mapowania danych do Dictionary: jedna kolumna jako klucze, druga jako wartosci</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================== MODULE 2 =============================== -->
+
+  <div class="section" id="m2-be-vs-se">
+    <h2 class="module-heading">Modul 2 — Rozbudowane State Machine</h2>
+
+    <div class="theory-box">
+      <div class="label">BusinessRuleException vs SystemException — kluczowe rozroznienie</div>
+      <p>W automatyzacji procesow wyrozniamy dwa fundamentalnie rozne typy bledow:</p>
+      <table class="gen" style="margin-top: 10px;">
+        <tr>
+          <th>Cecha</th>
+          <th>BusinessRuleException (BE)</th>
+          <th>System Exception (SE)</th>
+        </tr>
+        <tr>
+          <td><strong>Definicja</strong></td>
+          <td>Blad wynikajacy z danych lub regul biznesowych</td>
+          <td>Blad techniczny/systemowy</td>
+        </tr>
+        <tr>
+          <td><strong>Przyklady</strong></td>
+          <td>Brak NIPu w formularzu, kwota ujemna, niepoprawny email, dane nienumeryczne</td>
+          <td>Strona sie nie zaladowala, aplikacja przestala odpowiadac, timeout, brak internetu</td>
+        </tr>
+        <tr>
+          <td><strong>Czy wina robota?</strong></td>
+          <td>Nie — dane wejsciowe sa zle</td>
+          <td>Nie — srodowisko jest niestabilne</td>
+        </tr>
+        <tr>
+          <td><strong>Czy ponawiac?</strong></td>
+          <td><strong>NIE</strong> — ponawianie z tymi samymi zlymi danymi da ten sam wynik</td>
+          <td><strong>TAK</strong> — ponowna proba moze sie udac (np. strona sie zaladuje)</td>
+        </tr>
+        <tr>
+          <td><strong>Reakcja w SM</strong></td>
+          <td>Pomin transakcje (Failed + Business) &rarr; nastepna</td>
+          <td><strong>Restart</strong> — zamknij aplikacje, otworz ponownie, sprobuj jeszcze raz</td>
+        </tr>
+        <tr>
+          <td><strong>W UiPath</strong></td>
+          <td><code>Throw New BusinessRuleException("opis")</code></td>
+          <td>Nieobsluzony Exception (np. SelectorNotFoundException, TimeoutException)</td>
+        </tr>
+      </table>
+
+      <div class="theory-heading">Dlaczego to rozroznienie jest wazne?</div>
+      <p>Wyobraz sobie, ze robot przetwarza faktury. Faktura #123 ma literowke w NIPie (BE) — ponawianie 10 razy nic nie da. Ale jesli strona podatki.gov.pl nie odpowiada (SE) — po 30 sekundach moze zadzialac.</p>
+      <div class="info" style="margin-top: 10px;">
+        <strong>W REFramework to rozroznienie jest wbudowane:</strong><br>
+        BE &rarr; transakcja oznaczona jako Failed (Business), robot przechodzi do nastepnej<br>
+        SE &rarr; robot restartuje aplikacje (wraca do stanu Init) i ponawia probe
+      </div>
+    </div>
+  </div>
+
+  <!-- Stany procesu -->
+  <div class="section" id="m2-stany-procesu">
+    <div class="theory-box">
+      <div class="label">Stany procesu w rozbudowanej State Machine</div>
+      <table class="gen">
+        <tr>
+          <th>Stan</th>
+          <th>Opis</th>
+          <th>Transitions</th>
+        </tr>
+        <tr>
+          <td><strong>State - Init</strong></td>
+          <td>Inicjalizacja: zbierz config, otworz aplikacje, pobierz dane</td>
+          <td>Sukces &rarr; Pobierz transakcje; SE &rarr; Final State</td>
+        </tr>
+        <tr>
+          <td><strong>State - Pobierz jedna transakcje</strong></td>
+          <td>Sprawdz czy sa dane, pobierz wiersz z DataTable</td>
+          <td>Sukces &rarr; Procesowanie; Koniec &rarr; Final State</td>
+        </tr>
+        <tr>
+          <td><strong>State - Procesowanie jednej transakcji</strong></td>
+          <td>Wpisz dane do Robotivity, obsluz Business/System Exception</td>
+          <td>Sukces &rarr; Pobierz transakcje; SE &rarr; Init (restart!)</td>
+        </tr>
+        <tr>
+          <td><strong>Final State</strong></td>
+          <td>Loguj status, zamknij aplikacje</td>
+          <td>— (koniec)</td>
+        </tr>
+      </table>
+
+      <div class="theory-heading">Diagram przeplywu stanow</div>
+      <pre>                    +--------------------+
+                    |   State - Init     |
+                    |  (konfiguracja,    |
+                    |  otwarcie aplik.)  |
+                    +--------+-----------+
+                   Sukces |     | SE (blad krytyczny)
+          +-----------------+   |
+          | State - Pobierz |   |
+          |    transakcje   |   |
+          +-------+---------+   |
+         Sukces |  | Koniec     |
+   +--------------+  |          |
+   |   State -    |  |          |
+   | Procesowanie |--SE----&gt; State - Init (restart!)
+   +------+-------+             |
+     Sukces |                    |
+   (powrot do Pobierz)    +-------------+
+                           | Final State |
+                           |  (zamknij)  |
+                           +-------------+</pre>
+    </div>
+  </div>
+
+  <!-- Kluczowe zmienne -->
+  <div class="section" id="m2-kluczowe-zmienne">
+    <div class="theory-box">
+      <div class="label">Kluczowe zmienne</div>
+      <table class="var-table">
+        <tr>
+          <th>Nazwa</th>
+          <th>Typ</th>
+          <th>Opis</th>
+        </tr>
+        <tr>
+          <td>TransactionNumber</td>
+          <td>Int32 (default=1)</td>
+          <td>Numer biezacego wiersza</td>
+        </tr>
+        <tr>
+          <td>dict_Config</td>
+          <td>Dictionary(Of String, String)</td>
+          <td>Ustawienia (FilePath, SheetName)</td>
+        </tr>
+        <tr>
+          <td>dt_transakcje</td>
+          <td>DataTable</td>
+          <td>Dane z Transactions.xlsx</td>
+        </tr>
+        <tr>
+          <td>row_TransactionItem</td>
+          <td>DataRow</td>
+          <td>Biezacy wiersz (transakcja)</td>
+        </tr>
+        <tr>
+          <td>SystemException</td>
+          <td>Exception</td>
+          <td>Wyjatek systemowy (jesli wystapi)</td>
+        </tr>
+        <tr>
+          <td>BusinessRuleException</td>
+          <td>BusinessRuleException</td>
+          <td>Wyjatek biznesowy</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Logika stanow -->
+  <div class="section" id="m2-logika-stanow">
+    <div class="theory-box">
+      <div class="label">Logika poszczegolnych stanow</div>
+
+      <div class="theory-heading">State - Init</div>
+      <ol class="steps">
+        <li><strong>If</strong> — <code>dict_Config is Nothing</code> &rarr; pierwsze uruchomienie:
+          <ul class="bullets" style="margin-top: 4px;">
+            <li>Zbierz ustawienia do Dictionary (FilePath, SheetName)</li>
+            <li>Kill Process <code>excel</code></li>
+            <li>Read Range &rarr; <code>dt_transakcje</code></li>
+          </ul>
+        </li>
+        <li>Kill Process <code>robotivity</code> (wyczysc srodowisko)</li>
+        <li>Otworz Robotivity + zaloguj sie (z Retry Scope!)</li>
+        <li><strong>Try Catch</strong> wokol wszystkiego — jesli Exception &rarr; <code>SystemException = exception</code></li>
+        <li>Transitions:
+          <ul class="bullets" style="margin-top: 4px;">
+            <li><code>SystemException IsNot Nothing</code> &rarr; Final State (blad krytyczny)</li>
+            <li>Else &rarr; State - Pobierz transakcje</li>
+          </ul>
+        </li>
+      </ol>
+
+      <div class="theory-heading">State - Pobierz jedna transakcje</div>
+      <ol class="steps">
+        <li>Sprawdz <code>TransactionNumber &lt;= dt_transakcje.Rows.Count</code></li>
+        <li>Jesli tak &rarr; <code>row_TransactionItem = dt_transakcje.Rows(TransactionNumber - 1)</code></li>
+        <li>Jesli nie &rarr; <code>row_TransactionItem = Nothing</code></li>
+        <li>Transitions:
+          <ul class="bullets" style="margin-top: 4px;">
+            <li><code>row_TransactionItem Is Nothing</code> ("Koniec") &rarr; Final State</li>
+            <li>Else ("Sukces") &rarr; State - Procesowanie</li>
+          </ul>
+        </li>
+      </ol>
+
+      <div class="theory-heading">State - Procesowanie</div>
+      <ol class="steps">
+        <li>Wyczysc <code>BusinessRuleException = Nothing</code> (wazne, aby nie wejsc w nieskonczona petle!)</li>
+        <li>Wyciagnij CashIn, OnUsCheck, NotOnUsCheck z <code>row_TransactionItem</code></li>
+        <li>Sprawdz <code>.IsNumeric</code> — jesli nie &rarr; <code>BusinessRuleException = New BusinessRuleException("Dane nie sa numeryczne")</code></li>
+        <li>Jesli numeryczne &rarr; Type Into w Robotivity + Click Accept</li>
+        <li><code>TransactionNumber = TransactionNumber + 1</code></li>
+        <li>Transitions:
+          <ul class="bullets" style="margin-top: 4px;">
+            <li><code>SystemException IsNot Nothing</code> ("SE") &rarr; State - Init (restart!)</li>
+            <li>Else ("Sukces") &rarr; State - Pobierz transakcje</li>
+          </ul>
+        </li>
+      </ol>
+
+      <div class="theory-heading">Final State</div>
+      <ul class="bullets">
+        <li>If <code>SystemException Is Nothing</code> &rarr; "Robot wykonal prace" (Info)</li>
+        <li>Else &rarr; "Blad pracy robota: " + <code>SystemException.Message</code> (Error)</li>
+        <li>Kill Process <code>robotivity</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- =============================== CWICZENIA MODUL 2 =============================== -->
+
+  <div class="section" id="cw-state-machine">
+    <h2 class="module-heading">Cwiczenia — Modul 2</h2>
+
+    <div class="exercise-card">
+      <div class="exercise-title">
+        <div>
+          Cwiczenie — Rozbudowane State Machine
+          <div class="goal">Cel: Zbuduj State Machine z pelna obsluga wyjatkow — wzorzec zblizony do REFramework. Robot przetwarza transakcje z Excela w Robotivity, rozrozniajac bledy biznesowe (dane nienumeryczne) od systemowych (awaria aplikacji).</div>
+        </div>
+      </div>
+      <div class="exercise-body">
+        <div class="label">Czego sie nauczysz</div>
+        <div class="edu-list">
+          <div class="edu-item">Dictionary jako Config — wzorzec REFramework (Key-Value settings)</div>
+          <div class="edu-item"><code>If dict_Config is Nothing</code> — inicjalizacja tylko raz (przy restarcie nie powtarza)</div>
+          <div class="edu-item">Retry Scope — automatyczne ponawianie logowania (2 proby, 3s odstep)</div>
+          <div class="edu-item">BusinessRuleException vs SystemException — rozne typy bledow, rozne reakcje</div>
+          <div class="edu-item">Czyszczenie BusinessRuleException na poczatku procesowania — zapobiega nieskonczonej petli</div>
+          <div class="edu-item">Transition "SE" z Procesowania &rarr; Init — restart aplikacji po bledzie systemowym</div>
+          <div class="edu-item">TransactionNumber — reczny licznik wierszy (zamiast Get Transaction Item z Orchestratora)</div>
+        </div>
+        <div class="warn" style="margin-top: 8px;">
+          <strong>Wazne:</strong> To jest bezposredni wstep do REFramework! Zauwazyj analogie: Init &harr; InitAllApplications, Pobierz transakcje &harr; GetTransactionData, Procesowanie &harr; Process, Final State &harr; CloseAllApplications.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================== MODULE 3 =============================== -->
+
+  <div class="section" id="m3-dlaczego-reframework">
+    <h2 class="module-heading">Modul 3 — REFramework: wprowadzenie</h2>
+
+    <div class="theory-box">
+      <div class="label">Dlaczego REFramework? Jakie problemy rozwiazuje?</div>
+      <p>Wyobraz sobie, ze piszesz robota, ktory przetwarza 500 faktur dziennie. Bez frameworka musisz sam zaprogramowac:</p>
+      <ul class="bullets" style="margin-top: 8px;">
+        <li>Co sie stanie, gdy strona sie zawiesi w trakcie przetwarzania faktury #237?</li>
+        <li>Jak zrestartowac aplikacje i wrocic do przetwarzania?</li>
+        <li>Ile razy ponawiac probe przed oznaczeniem transakcji jako "Failed"?</li>
+        <li>Gdzie trzymac konfiguracje (URL, hasla, timeouty)?</li>
+        <li>Jak logowac postep i bledy?</li>
+      </ul>
+      <p style="margin-top: 10px;">Kazdy programista rozwiaze to inaczej — co prowadzi do chaosu w utrzymaniu. REFramework standaryzuje te rozwiazania.</p>
+    </div>
+  </div>
+
+  <!-- Co zapewnia out of the box -->
+  <div class="section" id="m3-out-of-the-box">
+    <div class="theory-box">
+      <div class="label">Co REFramework zapewnia "out of the box"</div>
+      <ol class="steps">
+        <li><strong>Automatyczny retry</strong> — po System Exception robot restartuje aplikacje i probuje ponownie (konfigurowalne MaxRetryNumber)</li>
+        <li><strong>Rozroznienie bledow</strong> — Business Exception (pomin transakcje) vs System Exception (restart)</li>
+        <li><strong>Centralna konfiguracja</strong> — Config.xlsx zamiast hardkodowanych wartosci</li>
+        <li><strong>Logging</strong> — automatyczne logowanie statusow transakcji</li>
+        <li><strong>Screenshots przy bledach</strong> — TakeScreenshot.xaml robi zrzut ekranu przy wyjatku</li>
+        <li><strong>Separacja kodu</strong> — Framework (nie ruszaj) vs Process.xaml (twoja logika)</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- Struktura folderow -->
+  <div class="section" id="m3-struktura-folderow">
+    <div class="theory-box">
+      <div class="label">Struktura folderow REFramework</div>
+      <table class="gen">
+        <tr>
+          <th>Folder/Plik</th>
+          <th>Opis</th>
+        </tr>
+        <tr>
+          <td><code>Main.xaml</code></td>
+          <td>Glowny State Machine (Init &rarr; Get Transaction &rarr; Process &rarr; End)</td>
+        </tr>
+        <tr>
+          <td><code>Framework/InitAllSettings.xaml</code></td>
+          <td>Wczytuje Config.xlsx do Dictionary</td>
+        </tr>
+        <tr>
+          <td><code>Framework/InitAllApplications.xaml</code></td>
+          <td>Otwiera potrzebne aplikacje</td>
+        </tr>
+        <tr>
+          <td><code>Framework/GetTransactionData.xaml</code></td>
+          <td>Pobiera kolejny element (z Queue lub innego zrodla)</td>
+        </tr>
+        <tr>
+          <td><code>Framework/Process.xaml</code></td>
+          <td>Logika biznesowa — przetwarzanie jednej transakcji</td>
+        </tr>
+        <tr>
+          <td><code>Framework/SetTransactionStatus.xaml</code></td>
+          <td>Ustawia status transakcji (Successful/Failed)</td>
+        </tr>
+        <tr>
+          <td><code>Framework/CloseAllApplications.xaml</code></td>
+          <td>Zamyka aplikacje (graceful close)</td>
+        </tr>
+        <tr>
+          <td><code>Framework/KillAllProcesses.xaml</code></td>
+          <td>Wymusza zamkniecie procesow (force kill)</td>
+        </tr>
+        <tr>
+          <td><code>Framework/RetryCurrentTransaction.xaml</code></td>
+          <td>Logika ponawiania transakcji</td>
+        </tr>
+        <tr>
+          <td><code>Framework/TakeScreenshot.xaml</code></td>
+          <td>Screenshot przy bledzie</td>
+        </tr>
+        <tr>
+          <td><code>Data/Config.xlsx</code></td>
+          <td>Plik konfiguracyjny (Settings, Constants, Assets)</td>
+        </tr>
+        <tr>
+          <td><code>Data/Input/</code></td>
+          <td>Dane wejsciowe</td>
+        </tr>
+        <tr>
+          <td><code>Data/Output/</code></td>
+          <td>Dane wyjsciowe</td>
+        </tr>
+        <tr>
+          <td><code>Data/Temp/</code></td>
+          <td>Pliki tymczasowe</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Stany REFramework -->
+  <div class="section" id="m3-stany-reframework">
+    <div class="theory-box">
+      <div class="label">Stany REFramework (Main.xaml)</div>
+      <table class="gen">
+        <tr>
+          <th>Stan</th>
+          <th>Co robi</th>
+          <th>Przejscia</th>
+        </tr>
+        <tr>
+          <td><strong>Init</strong></td>
+          <td>InitAllSettings + InitAllApplications</td>
+          <td>Sukces &rarr; Get Transaction; SE &rarr; End</td>
+        </tr>
+        <tr>
+          <td><strong>Get Transaction Data</strong></td>
+          <td>Pobiera kolejny element do przetworzenia</td>
+          <td>Jest element &rarr; Process; Brak &rarr; End</td>
+        </tr>
+        <tr>
+          <td><strong>Process Transaction</strong></td>
+          <td>Wykonuje Process.xaml + SetTransactionStatus</td>
+          <td>Sukces &rarr; Get Transaction; BE &rarr; Get Transaction; SE &rarr; Init</td>
+        </tr>
+        <tr>
+          <td><strong>End Process</strong></td>
+          <td>CloseAllApplications</td>
+          <td>— (koniec)</td>
+        </tr>
+      </table>
+
+      <div class="theory-heading">Cykl zycia transakcji w REFramework</div>
+      <pre>[Init] &rarr; ustawienia zaladowane &rarr; [Get Transaction]
+                                       |
+                              Jest transakcja? &rarr; NIE &rarr; [End Process]
+                                       | TAK
+                              [Process Transaction]
+                                    |    |    |
+                               Sukces   BE    SE
+                                 |      |     |
+                              [Get    [Get   [Init]  &larr; restart!
+                             Trans.]  Trans.] (retry)</pre>
+
+      <ul class="bullets" style="margin-top: 10px;">
+        <li><strong>Sukces</strong> &rarr; transakcja oznaczona jako Successful, pobierz nastepna</li>
+        <li><strong>Business Exception</strong> &rarr; transakcja oznaczona jako Failed (Business), pobierz nastepna (NIE ponawiaj)</li>
+        <li><strong>System Exception</strong> &rarr; restart aplikacji, ponow te sama transakcje (do MaxRetryNumber razy)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Config.xlsx -->
+  <div class="section" id="m3-config-xlsx">
+    <div class="theory-box">
+      <div class="label">Config.xlsx — trzy arkusze</div>
+      <table class="gen">
+        <tr>
+          <th>Arkusz</th>
+          <th>Opis</th>
+          <th>Kiedy uzywac</th>
+          <th>Przyklad</th>
+        </tr>
+        <tr>
+          <td><strong>Settings</strong></td>
+          <td>Ustawienia procesu, ktore moga sie zmieniac</td>
+          <td>Nazwy kolejek, URL-e, konfiguracja retry</td>
+          <td>OrchestratorQueueName = "MojaKolejka", MaxRetryNumber = 3</td>
+        </tr>
+        <tr>
+          <td><strong>Constants</strong></td>
+          <td>Stale wartosci, ktore sie nie zmieniaja</td>
+          <td>Timeouty, formaty dat, nazwy arkuszy</td>
+          <td>Timeout_General = 30000, DateFormat = "dd-MM-yyyy"</td>
+        </tr>
+        <tr>
+          <td><strong>Assets</strong></td>
+          <td>Nazwy assetow z Orchestratora (nie same wartosci!)</td>
+          <td>Nazwy credentiali, sciezki do aplikacji</td>
+          <td>CredentialName = "Robot_Login", AppPath_Asset = "Robotivity_Path"</td>
+        </tr>
+      </table>
+
+      <div class="warn" style="margin-top: 12px;">
+        <strong>Wazna roznica:</strong> W arkuszu Assets nie wpisujemy samych hasel ani wartosci — tylko <strong>nazwy assetow</strong> z Orchestratora. InitAllSettings wczytuje te nazwy, a potem robot uzywa Get Asset / Get Credential z tymi nazwami, aby pobrac rzeczywiste wartosci.
+      </div>
+
+      <div class="tip" style="margin-top: 10px;">
+        <strong>Uwaga techniczna:</strong> Config w REFramework jest typu <code>Dictionary(Of String, Object)</code> (nie <code>String, String</code>!) — dlatego przy odczycie zawsze potrzebny jest <code>.ToString</code>: <code>Config("OrchestratorQueueName").ToString</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- Co edytuje programista -->
+  <div class="section" id="m3-co-edytuje-programista">
+    <div class="theory-box">
+      <div class="label">Argumenty Main.xaml</div>
+      <ul class="bullets">
+        <li><code>in_OrchestratorQueueName</code> — nazwa kolejki (mozna nadpisac z Orchestratora)</li>
+        <li><code>in_OrchestratorQueueFolder</code> — folder Orchestratora</li>
+      </ul>
+
+      <div class="theory-heading">Co edytuje programista w REFramework?</div>
+      <p>W praktyce programista edytuje glownie:</p>
+      <ul class="bullets" style="margin-top: 8px;">
+        <li><strong><code>Process.xaml</code></strong> — logika biznesowa (przetwarzanie jednej transakcji)</li>
+        <li><strong><code>InitAllApplications.xaml</code></strong> — otwieranie aplikacji i logowanie</li>
+        <li><strong><code>Config.xlsx</code></strong> — ustawienia, stale, nazwy assetow</li>
+        <li><strong><code>CloseAllApplications.xaml</code></strong> — zamykanie aplikacji</li>
+      </ul>
+      <div class="info" style="margin-top: 10px;">
+        Reszta plikow Framework to boilerplate, ktory dziala "out of the box".
+      </div>
+    </div>
+  </div>
+
+  <!-- Windows Credential Manager -->
+  <div class="section" id="m3-credential-manager">
+    <div class="theory-box">
+      <div class="label">Alternatywa bez Orchestratora — Windows Credential Manager</div>
+      <p>Jesli nie masz dostepu do Orchestratora, mozesz uzyc <strong>Windows Credential Manager</strong> jako alternatywy:</p>
+      <ol class="steps" style="margin-top: 8px;">
+        <li>Panel sterowania &rarr; Menedzer poswiadczen &rarr; Poswiadczenia systemu Windows &rarr; Dodaj</li>
+        <li>W UiPath: <strong>Get Secure Credential</strong> zamiast <strong>Get Credential</strong>
+          <ul class="bullets" style="margin-top: 4px;">
+            <li>Target: nazwa poswiadczenia z Credential Manager</li>
+            <li>Output: Username (String), Password (SecureString)</li>
+          </ul>
+        </li>
+      </ol>
+      <div class="warn" style="margin-top: 12px;">
+        <strong>Wazne:</strong> Windows Credential Manager dziala tylko lokalnie na danej maszynie. W produkcji zawsze uzywamy Orchestrator Assets.
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================== MODULE 4a =============================== -->
+
+  <div class="section" id="cw-dispatcher">
+    <h2 class="module-heading">Modul 4a — Dispatcher</h2>
+
+    <div class="exercise-card">
+      <div class="exercise-title">
+        <div>
+          Cwiczenie — Dispatcher do kolejki
+          <div class="goal">Cel: Zaladuj transakcje z Transactions.xlsx do kolejki Orchestratora (hurtowo).</div>
+        </div>
+      </div>
+      <div class="exercise-body">
+        <div class="label">Czego sie nauczysz</div>
+        <div class="edu-list">
+          <div class="edu-item"><code>Kill Process "excel"</code> — zapobiega blokadzie pliku przez otwarty Excel</div>
+          <div class="edu-item"><code>Bulk Add Queue Items</code> — szybki sposob na zaladowanie wielu elementow z DataTable</div>
+          <div class="edu-item">FolderPath — sciezka folderu w Orchestratorze (My Workspace)</div>
+          <div class="edu-item">Dispatcher jest prosty — cala zlozonosc jest po stronie Performera</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================== MODULE 4b =============================== -->
+
+  <div class="section" id="cw-performer">
+    <h2 class="module-heading">Modul 4b — REFramework Performer</h2>
+
+    <div class="exercise-card">
+      <div class="exercise-title">
+        <div>
+          Cwiczenie — Performer na bazie REFramework
+          <div class="goal">Cel: Uzywajac szablonu REFramework, stworz Performera, ktory pobiera transakcje z kolejki i przetwarza je w Robotivity.</div>
+        </div>
+      </div>
+      <div class="exercise-body">
+        <div class="label">Co nalezy skonfigurowac</div>
+
+        <div class="theory-heading" style="margin-top: 0;">1. Config.xlsx</div>
+        <ul class="bullets">
+          <li>Settings: <code>OrchestratorQueueName</code> = nazwa kolejki</li>
+          <li>Settings: <code>OrchestratorQueueFolder</code> = folder Orchestratora</li>
+          <li>Assets: nazwy assetow (credentials, sciezka do aplikacji)</li>
+        </ul>
+
+        <div class="theory-heading">2. InitAllApplications.xaml</div>
+        <ul class="bullets">
+          <li>Get Credential &rarr; Username, Password</li>
+          <li>Get Asset &rarr; sciezka do Robotivity</li>
+          <li>Otworz Robotivity i zaloguj sie</li>
+        </ul>
+
+        <div class="theory-heading">3. GetTransactionData.xaml</div>
+        <ul class="bullets">
+          <li>Domyslnie: Get Transaction Item z kolejki (juz skonfigurowane w template)</li>
+        </ul>
+
+        <div class="theory-heading">4. Process.xaml</div>
+        <ul class="bullets">
+          <li>Wyciagnij dane z <code>in_TransactionItem.SpecificContent</code></li>
+          <li>Sprawdz <code>.IsNumeric</code></li>
+          <li>Jesli numeryczne &rarr; Type Into w Robotivity + Click Accept</li>
+          <li>Jesli nie &rarr; <code>Throw New BusinessRuleException("Dane nie sa numeryczne")</code></li>
+        </ul>
+
+        <div class="theory-heading">5. CloseAllApplications.xaml</div>
+        <ul class="bullets">
+          <li>Kill Process <code>robotivity</code></li>
+        </ul>
+
+        <div class="label" style="margin-top: 14px;">Czego sie nauczysz</div>
+        <div class="edu-list">
+          <div class="edu-item">REFramework automatycznie obsluguje: retry, logging, status transakcji, restart po SE</div>
+          <div class="edu-item">Programista skupia sie na: <code>Process.xaml</code> (logika) + <code>InitAllApplications.xaml</code> (setup)</div>
+          <div class="edu-item"><code>Throw New BusinessRuleException(...)</code> — sygnalizuje blad biznesowy (transakcja = Failed)</div>
+          <div class="edu-item">Nieobsluzony Exception w Process.xaml &rarr; REFramework traktuje jako System Exception &rarr; restart Init</div>
+          <div class="edu-item">Config.xlsx centralizuje wszystkie ustawienia — latwa zmiana bez edycji workflow</div>
+        </div>
+
+        <div class="tip" style="margin-top: 10px;">
+          <strong>Wskazowka:</strong> REFramework to standard produkcyjny. Wiekszosc pracy to edycja Process.xaml i Config.xlsx.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================== PRZYDATNE =============================== -->
+
+  <div class="section" id="debugowanie">
+    <h2 class="module-heading">Przydatne</h2>
+
+    <div class="theory-box">
+      <div class="label">Debugowanie — Dzien 3 i 4</div>
+
+      <div class="theory-heading">Flowchart i State Machine</div>
+      <ul class="bullets">
+        <li><strong>Breakpoint w Flowchart:</strong> Kliknij prawym na FlowStep &rarr; Toggle Breakpoint. Robot zatrzyma sie przed wykonaniem tego kroku.</li>
+        <li><strong>Sledzenie Transitions w State Machine:</strong> W trybie Debug (F5) UiPath podswietla aktualny State i Transition.</li>
+        <li><strong>Locals Panel:</strong> W trybie Debug panel Locals pokazuje wartosci wszystkich zmiennych — przydatne do sprawdzenia <code>TransactionItem</code>, <code>SystemException</code> itp.</li>
+        <li><strong>Slow Step:</strong> Wlacz Slow Step w toolbar — spowalnia wykonanie, widoczne kazde przejscie miedzy stanami.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section" id="typowe-problemy">
+    <div class="theory-box">
+      <div class="label">Typowe problemy i rozwiazania</div>
+      <table class="gen">
+        <tr>
+          <th>Problem</th>
+          <th>Przyczyna</th>
+          <th>Rozwiazanie</th>
+        </tr>
+        <tr>
+          <td>"Variable not found"</td>
+          <td>Scope zmiennej za maly</td>
+          <td>Przesun deklaracje zmiennej wyzej (np. na poziom StateMachine)</td>
+        </tr>
+        <tr>
+          <td>NullReferenceException w Dictionary</td>
+          <td>Dictionary nie zainicjalizowane</td>
+          <td>Dodaj <code>New Dictionary(Of String, String)</code> w Assign</td>
+        </tr>
+        <tr>
+          <td>Queue Item pusty</td>
+          <td>Brak danych w kolejce</td>
+          <td>Najpierw uruchom Dispatcher</td>
+        </tr>
+        <tr>
+          <td>"Queue not found"</td>
+          <td>Zla nazwa kolejki lub folderu</td>
+          <td>Sprawdz QueueName i FolderPath w Orchestratorze</td>
+        </tr>
+        <tr>
+          <td>Nieskonczona petla w State Machine</td>
+          <td>Brak warunku wyjscia</td>
+          <td>Dodaj czyszczenie wyjatkow + poprawne Transitions</td>
+        </tr>
+        <tr>
+          <td>Haslo widoczne w logach</td>
+          <td>Uzycie Text zamiast SecureText</td>
+          <td>W Type Into uzyj SecureText dla hasla</td>
+        </tr>
+        <tr>
+          <td>Plik zablokowany (Excel)</td>
+          <td>Excel otwarty w tle</td>
+          <td>Kill Process <code>excel</code> przed Read Range</td>
+        </tr>
+        <tr>
+          <td>Path Exists zwraca False</td>
+          <td>Zla sciezka lub PathType</td>
+          <td>Sprawdz: File vs Folder w PathType</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+<!-- FOOTER -->
+<div class="material-footer">
+  <img src="logo.png" alt="Robotivity" style="height:36px; vertical-align:middle; margin-bottom:6px;"><br>
+  Szkolenie przygotowane przez <strong>Robotivity&reg;</strong> — Autoryzowany Partner UiPath<br>
+  info@robotivity.pl &nbsp;&middot;&nbsp; www.Robotivity.pl &nbsp;&middot;&nbsp; tel.: +48 690 020 576
+</div>
+
+</div><!-- /main -->
+
+<script>
+  const sections = document.querySelectorAll('.section[id]');
+  const navItems = document.querySelectorAll('.nav-item');
+  function onScroll() { let current = ''; sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) current = s.id; }); navItems.forEach(a => { a.classList.toggle('active', a.getAttribute('href') === '#' + current); }); }
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  navItems.forEach(a => { a.addEventListener('click', e => { const target = document.querySelector(a.getAttribute('href')); if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }); });
+  function filterNav(query) { const q = query.toLowerCase(); navItems.forEach(a => { const match = a.textContent.toLowerCase().includes(q); a.style.display = (q === '' || match) ? '' : 'none'; }); document.querySelectorAll('.nav-module, .nav-day').forEach(el => { el.style.display = (q === '') ? '' : 'none'; }); }
+</script>
+</body>
+</html>
