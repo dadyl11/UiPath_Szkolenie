@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Materialy szkoleniowe — UiPath Dzien 2</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:   #1e4d8c;
+  --blue:   #5b9bd5;
+  --light:  #eaf3fb;
+  --border: #cde0f5;
+  --text:   #222;
+  --muted:  #666;
+  --sidebar-w: 270px;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text);
+  background: #f4f8fd;
+  display: flex;
+}
+
+#sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: #0f2744;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+}
+
+.sidebar-header { padding: 20px 16px 14px; border-bottom: 1px solid #1e4d8c; }
+.sidebar-header .title { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.3; }
+.sidebar-header .sub { font-size: 11px; color: #5b9bd5; margin-top: 3px; }
+.sidebar-search { padding: 10px 12px; border-bottom: 1px solid #1a3a60; }
+.sidebar-search input { width: 100%; background: #1a3a60; border: 1px solid #2a5a90; border-radius: 4px; padding: 6px 10px; color: #d0e8f8; font-size: 12px; outline: none; }
+.sidebar-search input::placeholder { color: #5b7a9a; }
+.sidebar-search input:focus { border-color: #5b9bd5; }
+nav { flex: 1; padding: 8px 0 20px; }
+.nav-day { padding: 10px 16px 4px; font-size: 10px; font-weight: 700; color: #5b9bd5; text-transform: uppercase; letter-spacing: 1.5px; }
+.nav-module { padding: 7px 16px 3px; font-size: 11px; font-weight: 700; color: #7fb3e0; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 4px; }
+.nav-item { display: block; padding: 6px 16px 6px 24px; font-size: 12.5px; color: #a0c0e0; text-decoration: none; border-left: 3px solid transparent; transition: all 0.12s; cursor: pointer; line-height: 1.35; }
+.nav-item:hover { color: #fff; background: rgba(91,155,213,0.1); border-left-color: #5b9bd5; }
+.nav-item.active { color: #fff; background: rgba(91,155,213,0.18); border-left-color: #5b9bd5; font-weight: 600; }
+.nav-item.exercise { padding-left: 34px; font-size: 12px; }
+#main { margin-left: var(--sidebar-w); flex: 1; padding: 32px 40px 60px; max-width: 860px; }
+.section { margin-bottom: 48px; }
+.day-divider { background: var(--navy); color: #fff; padding: 14px 22px; border-radius: 6px; margin-bottom: 28px; font-size: 17px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.module-heading { font-size: 16px; font-weight: 700; color: var(--navy); border-left: 4px solid var(--blue); padding-left: 12px; margin-bottom: 14px; }
+.exercise-card { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 24px; background: #fff; }
+.exercise-title { background: var(--blue); color: #fff; font-weight: 700; font-size: 13.5px; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; }
+.exercise-title .goal { font-size: 11.5px; font-weight: 400; color: #d0e8f8; margin-top: 2px; }
+.exercise-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 14px; }
+.theory-box { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 16px 18px; margin-bottom: 20px; }
+.label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--navy); margin-bottom: 6px; }
+.steps { padding-left: 20px; }
+.steps li { margin-bottom: 5px; font-size: 13.5px; }
+.steps li::marker { color: var(--blue); font-weight: 700; }
+.bullets { padding-left: 18px; }
+.bullets li { margin-bottom: 4px; font-size: 13.5px; }
+.edu-list { display: flex; flex-direction: column; gap: 5px; }
+.edu-item { background: var(--light); border-left: 3px solid var(--blue); padding: 6px 12px; border-radius: 0 4px 4px 0; font-size: 13px; color: #1a3a60; }
+.var-table { width: 100%; border-collapse: collapse; font-size: 12.5px; font-family: 'Consolas', 'Courier New', monospace; }
+.var-table th { background: var(--navy); color: #fff; padding: 5px 10px; text-align: left; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif; font-size: 11px; }
+.var-table tr:nth-child(even) { background: var(--light); }
+.var-table td { padding: 5px 10px; border-bottom: 1px solid var(--border); }
+table.gen { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.gen th { background: var(--navy); color: #fff; padding: 7px 12px; text-align: left; font-weight: 600; }
+table.gen tr:nth-child(even) { background: var(--light); }
+table.gen td { padding: 6px 12px; border-bottom: 1px solid var(--border); }
+code { background: var(--light); color: var(--navy); padding: 1px 5px; border-radius: 3px; font-family: 'Consolas', 'Courier New', monospace; font-size: 12px; border: 1px solid var(--border); }
+pre { background: #f0f6ff; border: 1px solid var(--border); border-radius: 5px; padding: 12px 14px; font-family: 'Consolas', 'Courier New', monospace; font-size: 12.5px; color: var(--navy); white-space: pre-wrap; word-break: break-word; }
+.tip { background: #e8f4fd; border-left: 3px solid var(--blue); padding: 9px 13px; border-radius: 0 5px 5px 0; font-size: 13px; color: #1a3a60; }
+.warn { background: #fff8e1; border-left: 3px solid #f9a825; padding: 9px 13px; border-radius: 0 5px 5px 0; font-size: 13px; color: #5a4000; }
+.warn strong, .tip strong { color: inherit; font-weight: 700; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.badge { display: inline-block; background: var(--blue); color: #fff; font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 10px; vertical-align: middle; margin-right: 3px; }
+.badge.green { background: #2e7d32; }
+.badge.red { background: #c62828; }
+.badge.orange { background: #e65100; }
+strong { color: var(--navy); }
+.theory-heading { font-size: 13px; font-weight: 700; color: var(--navy); margin: 16px 0 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+.info { background: #e8f5e9; border-left: 3px solid #2e7d32; padding: 9px 13px; border-radius: 0 5px 5px 0; font-size: 13px; color: #1b5e20; }
+/* Header */
+.material-header { display: flex; align-items: center; gap: 24px; border-bottom: 3px solid var(--blue); padding-bottom: 18px; margin-bottom: 28px; }
+.material-header img { height: 64px; width: auto; flex-shrink: 0; }
+.material-header-text h1 { font-size: 20px; color: var(--navy); font-weight: 700; margin-bottom: 2px; }
+.material-header-text .subtitle { font-size: 13px; color: var(--blue); font-weight: 600; }
+.material-header-text .subtitle-small { font-size: 11px; color: #999; margin-top: 2px; }
+/* Footer */
+.material-footer { text-align: center; font-size: 12px; color: #999; border-top: 2px solid var(--light); margin-top: 40px; padding-top: 16px; }
+.material-footer strong { color: var(--navy); }
+
+@page { margin: 10mm 0 10mm 0; }
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+  body { background: #fff; }
+  #sidebar { display: none; }
+  #main { margin-left: 0; padding: 20px 30px; max-width: 100%; }
+  .material-header img { height: 50px; }
+  .exercise-card, table.gen, .var-table, pre, .tip, .warn, .info, .edu-item { page-break-inside: avoid; break-inside: avoid; }
+  .module-heading, .theory-heading, .day-divider, .label { page-break-after: avoid; break-after: avoid; }
+  .theory-box { page-break-before: auto; break-before: auto; }
+  .material-footer { page-break-before: avoid; break-before: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SIDEBAR ============ -->
+<aside id="sidebar">
+  <div class="sidebar-header">
+    <div class="title">Materialy szkoleniowe — UiPath Dzien 2</div>
+    <div class="sub">Szkolenie UiPath | Materialy dla uczestnika</div>
+  </div>
+  <div class="sidebar-search">
+    <input type="text" placeholder="Szukaj w materialach..." oninput="filterNav(this.value)">
+  </div>
+  <nav>
+    <div class="nav-day">Dzien 2 — Materialy szkoleniowe</div>
+
+    <div class="nav-module">Modul 4 — Poczta elektroniczna</div>
+    <a class="nav-item" href="#m4-wprowadzenie">Wprowadzenie — email w RPA</a>
+    <a class="nav-item" href="#m4-protokoly">Trzy protokoly pocztowe</a>
+    <a class="nav-item" href="#m4-smtp">SMTP — wysylanie</a>
+    <a class="nav-item" href="#m4-imap">IMAP — odbieranie</a>
+    <a class="nav-item" href="#m4-bezpieczenstwo">Bezpieczenstwo hasel</a>
+    <a class="nav-item" href="#m4-mailmessage">Obiekt MailMessage</a>
+    <a class="nav-item" href="#m4-sciezki">Budowanie sciezek i tresci</a>
+
+    <div class="nav-module">Cwiczenia — Modul 4</div>
+    <a class="nav-item exercise" href="#m4-zad1">Zad. 1 — Wysylka emaila</a>
+    <a class="nav-item exercise" href="#m4-zad4">Zad. 4 — Analiza zamowien</a>
+
+    <div class="nav-module">Modul 5 — Data Scraping</div>
+    <a class="nav-item" href="#m5-wprowadzenie">Wprowadzenie</a>
+    <a class="nav-item" href="#m5-aktywnosci">Kluczowe aktywnosci</a>
+    <a class="nav-item" href="#m5-paginacja">Paginacja</a>
+    <a class="nav-item" href="#m5-porownanie">Porownanie metod</a>
+
+    <div class="nav-module">Cwiczenia — Modul 5</div>
+    <a class="nav-item exercise" href="#m5-ceidg">Cw. Data Scraping — CEIDG</a>
+
+    <div class="nav-module">Dodatkowe zagadnienia</div>
+    <a class="nav-item" href="#extra-trycatch">Try-Catch</a>
+    <a class="nav-item" href="#extra-uiexplorer">UI Explorer</a>
+    <a class="nav-item" href="#extra-sterowanie">Aktywnosci sterowania</a>
+    <a class="nav-item" href="#extra-kolekcje">Kolekcje: Array vs List vs Dictionary</a>
+
+    <div class="nav-module">Przydatne</div>
+    <a class="nav-item" href="#problemy">Typowe problemy</a>
+  </nav>
+</aside>
+
+<!-- ============ MAIN ============ -->
+<main id="main">
+
+  <!-- HEADER -->
+  <div class="material-header">
+    <img src="logo.png" alt="Robotivity logo">
+    <div class="material-header-text">
+      <h1>Materialy szkoleniowe — UiPath Dzien 2</h1>
+      <div class="subtitle">Autoryzowany Partner UiPath</div>
+      <div class="subtitle-small">info@robotivity.pl &nbsp;&middot;&nbsp; www.Robotivity.pl &nbsp;&middot;&nbsp; tel.: +48 690 020 576</div>
+    </div>
+  </div>
+
+  <!-- ==================== DAY 2 HEADER ==================== -->
+  <div class="day-divider">Dzien 2 — Poczta elektroniczna, Data Scraping, Obsluga bledow</div>
+
+  <!-- ==================== MODUL 4 ==================== -->
+
+  <!-- Wprowadzenie — email w RPA -->
+  <div class="section" id="m4-wprowadzenie">
+    <h2 class="module-heading">Wprowadzenie — email w RPA</h2>
+    <div class="theory-box">
+      <p>Automatyzacja poczty to jeden z najczestszych scenariuszy RPA w biznesie. Roboty wysylaja raporty, pobieraja zamowienia z emaili, parsuja dane z zalacznikow, odpowiadaja na typowe zapytania. UiPath obsluguje email przez standardowe protokoly internetowe — nie potrzebuje GUI klienta pocztowego.</p>
+    </div>
+  </div>
+
+  <!-- Trzy protokoly pocztowe -->
+  <div class="section" id="m4-protokoly">
+    <h2 class="module-heading">Trzy protokoly pocztowe</h2>
+    <div class="theory-box">
+      <table class="gen">
+        <tr><th>Protokol</th><th>Kierunek</th><th>Port (SSL)</th><th>Opis</th><th>Aktywnosc UiPath</th></tr>
+        <tr><td><strong>SMTP</strong></td><td>Wysylanie</td><td>465 lub 587</td><td>Simple Mail Transfer Protocol — "kurier" dostarczajacy listy</td><td><code>Send SMTP Mail Message</code></td></tr>
+        <tr><td><strong>IMAP</strong></td><td>Odbieranie</td><td>993</td><td>Internet Message Access Protocol — "skrzynka pocztowa na serwerze"</td><td><code>Get IMAP Mail Messages</code></td></tr>
+        <tr><td><strong>POP3</strong></td><td>Odbieranie</td><td>995</td><td>Post Office Protocol — "pobierz i usun z serwera"</td><td><code>Get POP3 Mail Messages</code></td></tr>
+      </table>
+
+      <div class="theory-heading">IMAP vs POP3 — ktorej uzywac?</div>
+      <table class="gen">
+        <tr><th>Cecha</th><th>IMAP</th><th>POP3</th></tr>
+        <tr><td>Wiadomosci na serwerze</td><td><strong>Zostaja</strong> (synchronizacja)</td><td><strong>Usuwane</strong> po pobraniu (domyslnie)</td></tr>
+        <tr><td>Wiele urzadzen</td><td>TAK — emaile dostepne wszedzie</td><td>NIE — po pobraniu znikaja z serwera</td></tr>
+        <tr><td>Foldery</td><td>TAK — obsluguje foldery (Inbox, Sent, wlasne)</td><td>NIE — tylko Inbox</td></tr>
+        <tr><td>W RPA</td><td><strong>Zalecany</strong> — nie niszczy danych</td><td>Ostroznie — moze usunac emaile</td></tr>
+      </table>
+
+      <div class="tip" style="margin-top: 14px;"><strong>Rekomendacja:</strong> Zawsze uzywaj IMAP, chyba ze klient explicite wymaga POP3.</div>
+    </div>
+  </div>
+
+  <!-- SMTP — wysylanie -->
+  <div class="section" id="m4-smtp">
+    <h2 class="module-heading">SMTP — jak dziala wysylanie?</h2>
+    <div class="theory-box">
+<pre>[Robot UiPath]
+    &#8595; (Send SMTP Mail Message)
+[Serwer SMTP nadawcy: smtp.gmail.com:465]
+    &#8595; (SSL/TLS — szyfrowane polaczenie)
+[Serwer SMTP odbiorcy: smtp.robotivity.pl]
+    &#8595;
+[Skrzynka odbiorcza: info@robotivity.pl]</pre>
+
+      <div class="theory-heading">Konfiguracja SMTP dla popularnych dostawcow</div>
+      <table class="gen">
+        <tr><th>Dostawca</th><th>Serwer</th><th>Port</th><th>SSL</th></tr>
+        <tr><td>Gmail</td><td><code>smtp.gmail.com</code></td><td>465</td><td>True</td></tr>
+        <tr><td>Outlook/O365</td><td><code>smtp.office365.com</code></td><td>587</td><td>True</td></tr>
+        <tr><td>Yahoo</td><td><code>smtp.mail.yahoo.com</code></td><td>465</td><td>True</td></tr>
+      </table>
+
+      <div class="theory-heading">Gmail — wymagane App Password</div>
+      <p>Gmail od 2022 roku blokuje logowanie "mniej bezpiecznymi aplikacjami". Aby UiPath mogl wysylac emaile przez Gmail:</p>
+      <ol class="steps" style="margin-top: 8px;">
+        <li>Wlacz weryfikacje dwuetapowa (2FA) na koncie Google</li>
+        <li>Wygeneruj App Password: Google Account &rarr; Security &rarr; App Passwords</li>
+        <li>Uzyj wygenerowanego hasla (16 znakow) zamiast hasla do konta</li>
+      </ol>
+
+      <div class="warn" style="margin-top: 14px;"><strong>Wazne:</strong> App Password to jednorazowy klucz — wygeneruj osobny dla kazdego robota. Nigdy nie uzywaj glownego hasla do konta!</div>
+    </div>
+  </div>
+
+  <!-- IMAP — odbieranie -->
+  <div class="section" id="m4-imap">
+    <h2 class="module-heading">IMAP — jak dziala odbieranie?</h2>
+    <div class="theory-box">
+<pre>[Robot UiPath]
+    &#8595; (Get IMAP Mail Messages)
+[Serwer IMAP: imap.gmail.com:993]
+    &#8595; (SSL/TLS)
+[Zwraca: List&lt;MailMessage&gt;]
+    &#8595;
+[Robot przetwarza kazdy email w petli]</pre>
+
+      <div class="theory-heading">Konfiguracja Get IMAP Mail Messages</div>
+      <table class="gen">
+        <tr><th>Wlasciwosc</th><th>Opis</th><th>Przyklad</th></tr>
+        <tr><td>Server</td><td>Adres serwera IMAP</td><td><code>imap.gmail.com</code></td></tr>
+        <tr><td>Port</td><td>Port IMAP (SSL)</td><td><code>993</code></td></tr>
+        <tr><td>SecureConnection</td><td>Szyfrowanie</td><td><code>True</code></td></tr>
+        <tr><td>MailFolder</td><td>Folder do odczytu</td><td><code>"INBOX"</code> lub <code>"Robotivity"</code></td></tr>
+        <tr><td>Top</td><td>Ile wiadomosci pobrac (od najnowszej)</td><td><code>30</code></td></tr>
+        <tr><td>OnlyUnreadMessages</td><td>Tylko nieprzeczytane</td><td><code>True</code> / <code>False</code></td></tr>
+        <tr><td>Output</td><td>Lista emaili</td><td><code>lst_emaile</code> (List&lt;MailMessage&gt;)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Bezpieczenstwo hasel -->
+  <div class="section" id="m4-bezpieczenstwo">
+    <h2 class="module-heading">Bezpieczenstwo hasel w UiPath</h2>
+    <div class="theory-box">
+      <div class="theory-heading">Dlaczego nie trzymamy hasel w workflow?</div>
+      <p>Wyobraz sobie scenariusz: publikujesz robota do Orchestratora, a w workflow masz <code>Password = "mojeHaslo123"</code>. Kazdy, kto ma dostep do projektu, widzi haslo w czystym tekscie. Co gorsza — haslo moze trafic do logow, do repozytorium git, do kopii zapasowych.</p>
+
+      <div class="theory-heading">Hierarchia bezpieczenstwa hasel w UiPath</div>
+      <table class="gen">
+        <tr><th>Poziom</th><th>Metoda</th><th>Bezpieczenstwo</th><th>Kiedy uzywac</th></tr>
+        <tr><td>1 (najgorszy)</td><td>String w workflow</td><td>Widoczne wszedzie!</td><td><strong>NIGDY</strong> w produkcji</td></tr>
+        <tr><td>2</td><td>Windows Credential Manager</td><td>Lokalne na maszynie</td><td>Rozwoj/testy</td></tr>
+        <tr><td>3 (najlepszy)</td><td>Orchestrator Credential Asset</td><td>Szyfrowane, centralne</td><td><strong>Produkcja</strong></td></tr>
+      </table>
+
+      <div class="theory-heading">String vs SecureString</div>
+      <table class="gen">
+        <tr><th>Typ</th><th>String</th><th>SecureString</th></tr>
+        <tr><td>Przechowywanie</td><td>Jawny tekst w pamieci</td><td>Zaszyfrowany w pamieci</td></tr>
+        <tr><td>W logach</td><td><strong>Widoczne</strong> (jesli logowane)</td><td><strong>Ukryte</strong> (wyswietla <code>*****</code>)</td></tr>
+        <tr><td>W Type Into</td><td>Wlasciwosc <code>Text</code></td><td>Wlasciwosc <code>SecureText</code></td></tr>
+        <tr><td>Konwersja</td><td>—</td><td><code>New NetworkCredential("", secureStr).Password</code> (ostroznie!)</td></tr>
+      </table>
+
+      <div class="tip" style="margin-top: 14px;"><strong>Zasada:</strong> Hasla zawsze przechowuj jako <code>SecureString</code>. W <code>Type Into</code> dla pola hasla zawsze uzywaj <code>SecureText</code>, nigdy <code>Text</code>.</div>
+
+      <div class="theory-heading">Zrodla credentials</div>
+      <p><strong>1. Windows Credential Manager</strong> (lokalnie):</p>
+      <ul class="bullets" style="margin-top: 6px; margin-bottom: 10px;">
+        <li>Panel sterowania &rarr; Menedzer poswiadczen &rarr; Poswiadczenia systemu Windows</li>
+        <li>Aktywnosc: <code>Get Secure Credential</code> (Target = nazwa poswiadczenia)</li>
+        <li>Zwraca: Username (String) + Password (SecureString)</li>
+        <li>Ograniczenie: dziala tylko na maszynie, na ktorej jest zapisane</li>
+      </ul>
+
+      <p><strong>2. UiPath Orchestrator</strong> (centralnie):</p>
+      <ul class="bullets" style="margin-top: 6px;">
+        <li>Orchestrator &rarr; Assets &rarr; Credential</li>
+        <li>Aktywnosc: <code>Get Credential</code> (AssetName = nazwa asseta)</li>
+        <li>Zwraca: Username (String) + Password (SecureString)</li>
+        <li>Zaleta: centralne zarzadzanie, dziala na kazdej maszynie z polaczeniem</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Obiekt MailMessage -->
+  <div class="section" id="m4-mailmessage">
+    <h2 class="module-heading">Obiekt MailMessage — "anatomia" emaila w UiPath</h2>
+    <div class="theory-box">
+      <p>Gdy pobierasz emaile przez <code>Get IMAP Mail Messages</code>, dostajesz liste obiektow <code>MailMessage</code>. Kazdy obiekt to jeden email z pelnymi metadanymi:</p>
+
+      <table class="gen" style="margin-top: 12px;">
+        <tr><th>Wlasciwosc</th><th>Typ</th><th>Opis</th><th>Przyklad</th></tr>
+        <tr><td><code>.Subject</code></td><td>String</td><td>Temat emaila</td><td><code>"Zamowienie 12345"</code></td></tr>
+        <tr><td><code>.Body</code></td><td>String</td><td>Tresc emaila (tekst)</td><td><code>"Dzien dobry..."</code></td></tr>
+        <tr><td><code>.From.Address</code></td><td>String</td><td>Adres nadawcy</td><td><code>"jan@firma.pl"</code></td></tr>
+        <tr><td><code>.From.DisplayName</code></td><td>String</td><td>Nazwa nadawcy</td><td><code>"Jan Kowalski"</code></td></tr>
+        <tr><td><code>.DateAsDateTime</code></td><td>DateTime</td><td>Data i godzina</td><td><code>2024-01-15 10:30</code></td></tr>
+        <tr><td><code>.Attachments</code></td><td>Collection</td><td>Lista zalacznikow</td><td>(obiekty Attachment)</td></tr>
+        <tr><td><code>.To</code></td><td>Collection</td><td>Lista odbiorcow</td><td>(obiekty MailAddress)</td></tr>
+        <tr><td><code>.CC</code></td><td>Collection</td><td>Lista CC</td><td>(obiekty MailAddress)</td></tr>
+        <tr><td><code>.IsRead</code></td><td>Boolean</td><td>Czy przeczytany</td><td><code>True</code> / <code>False</code></td></tr>
+      </table>
+
+      <div class="theory-heading">Przydatne metody na MailMessage</div>
+<pre>' Czy temat zawiera slowo?
+currentMail.Subject.Contains("Zamowienie")     &rarr; True/False
+
+' Ostatnie slowo tematu (np. numer zamowienia)
+currentMail.Subject.Split(" ").Last()          &rarr; "12345"
+
+' Data w formacie polskim
+currentMail.DateAsDateTime.ToString("dd.MM.yyyy")  &rarr; "15.01.2024"
+
+' Adres nadawcy
+currentMail.From.Address                        &rarr; "jan@firma.pl"
+
+' Ile zalacznikow?
+currentMail.Attachments.Count                   &rarr; 2</pre>
+    </div>
+  </div>
+
+  <!-- Budowanie sciezek i tresci -->
+  <div class="section" id="m4-sciezki">
+    <h2 class="module-heading">Budowanie sciezek do plikow i tresci emaila</h2>
+    <div class="theory-box">
+      <div class="theory-heading">Budowanie sciezek do plikow — dobre vs zle praktyki</div>
+<pre>' ZLE — hardkodowana sciezka (nie zadziala na innej maszynie!):
+str_sciezka = "C:\Users\Jan\Documents\UiPath\Projekt\Produkty.xlsx"
+
+' LEPSZE — sciezka wzgledna:
+str_sciezka = Environment.CurrentDirectory + "\Produkty.xlsx"
+
+' NAJLEPSZE — Path.Combine (bezpieczne laczenie):
+str_sciezka = Path.Combine(Environment.CurrentDirectory, "Produkty.xlsx")</pre>
+
+      <div class="theory-heading">Budowanie tresci emaila</div>
+<pre>' Sposob 1 — konkatenacja (malo czytelna przy dlugich tresciach):
+str_body = "Czesc" + vbNewLine + "Raport z dnia: " + Now.ToShortDateString + vbNewLine + "Pozdrawiam"
+
+' Sposob 2 — String.Format (czytelniejsza):
+str_body = String.Format("Czesc{0}Raport z dnia: {1}{0}Pozdrawiam", vbNewLine, Now.ToShortDateString)</pre>
+
+      <div class="theory-heading">Wzorzec "Filtruj &rarr; Parsuj &rarr; Raportuj"</div>
+      <p>To jeden z najczestszych wzorcow w RPA:</p>
+      <ol class="steps" style="margin-top: 8px; margin-bottom: 12px;">
+        <li><strong>Pobierz dane</strong> — z emaila, strony www, pliku, API</li>
+        <li><strong>Filtruj</strong> — wybierz tylko to, co Cie interesuje (<code>.Contains()</code>, IF, Filter Data Table)</li>
+        <li><strong>Parsuj</strong> — wyciagnij konkretne informacje (<code>.Split()</code>, Regex, substring)</li>
+        <li><strong>Raportuj</strong> — zapisz wynik do Excela, wyslij emailem, wstaw do systemu</li>
+      </ol>
+<pre>[Get IMAP Mail]  &rarr;  [For Each + IF]  &rarr;  [Split/Parse]  &rarr;  [Build DT + Write Range]
+   POBIERZ            FILTRUJ             PARSUJ              RAPORTUJ</pre>
+    </div>
+  </div>
+
+  <!-- ==================== CWICZENIA MODUL 4 ==================== -->
+
+  <!-- Zadanie 1 -->
+  <div class="section" id="m4-zad1">
+    <h2 class="module-heading">Cwiczenia — Modul 4</h2>
+    <div class="exercise-card">
+      <div class="exercise-title">
+        <div>Zadanie 1 — Wysylka emaila z zalacznikiem
+          <div class="goal">Send SMTP Mail Message | Get Credential | Environment.CurrentDirectory | vbNewLine</div>
+        </div>
+      </div>
+      <div class="exercise-body">
+        <div>
+          <div class="label">Cel</div>
+          <p style="font-size:13.5px;">Wyslanie emaila przez SMTP z dynamiczna trescia i zalacznikiem Excel.</p>
+        </div>
+        <div>
+          <div class="label">Czego sie nauczysz</div>
+          <div class="edu-list">
+            <div class="edu-item"><code>Send SMTP Mail Message</code> — konfiguracja wysylki (serwer, port, SSL)</div>
+            <div class="edu-item"><code>Get Credential</code> — pobieranie danych logowania z Orchestratora</div>
+            <div class="edu-item"><code>Environment.CurrentDirectory</code> — sciezka do biezacego folderu projektu</div>
+            <div class="edu-item"><code>vbNewLine</code> — nowa linia w tresci emaila</div>
+            <div class="edu-item"><code>Now.ToShortDateString</code> — data bez godziny</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zadanie 4 -->
+  <div class="section" id="m4-zad4">
+    <div class="exercise-card">
+      <div class="exercise-title">
+        <div>Zadanie 4 — Pobieranie i analiza zamowien
+          <div class="goal">Get IMAP Mail Messages | List&lt;MailMessage&gt; | Multiple Assign | .Split().Last() | Filtruj-Parsuj-Raportuj</div>
+        </div>
+      </div>
+      <div class="exercise-body">
+        <div>
+          <div class="label">Cel</div>
+          <p style="font-size:13.5px;">Pobieranie emaili przez IMAP, filtrowanie po temacie, budowanie raportu w DataTable i zapis do Excela.</p>
+        </div>
+        <div>
+          <div class="label">Czego sie nauczysz</div>
+          <div class="edu-list">
+            <div class="edu-item"><code>Get IMAP Mail Messages</code> — pobieranie emaili z konkretnego folderu</div>
+            <div class="edu-item"><code>List&lt;MailMessage&gt;</code> — dynamiczna lista emaili</div>
+            <div class="edu-item"><code>Multiple Assign</code> — wydajniejsze przypisanie wielu zmiennych w jednym kroku</div>
+            <div class="edu-item"><code>.Subject.Contains("tekst")</code> — filtrowanie emaili po temacie</div>
+            <div class="edu-item"><code>.Split(" ").Last()</code> — ekstrakcja numeru zamowienia z tematu</div>
+            <div class="edu-item">Wzorzec "Filtruj &rarr; Parsuj &rarr; Raportuj"</div>
+          </div>
+        </div>
+        <div>
+          <div class="label">Multiple Assign — dlaczego lepszy niz wiele Assign</div>
+          <p style="font-size:13.5px;"><code>Multiple Assign</code> pozwala ustawic kilka zmiennych w jednym kroku:</p>
+          <ul class="bullets" style="margin-top: 6px;">
+            <li><strong>Czytelnosc</strong> — widzisz wszystkie powiazane przypisania w jednym miejscu</li>
+            <li><strong>Wydajnosc</strong> — jedna aktywnosc zamiast trzech</li>
+            <li><strong>Grupowanie logiczne</strong> — "dane z biezacego emaila" to jeden blok</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODUL 5 ==================== -->
+
+  <!-- Wprowadzenie -->
+  <div class="section" id="m5-wprowadzenie">
+    <h2 class="module-heading">Modul 5 — Data Scraping</h2>
+    <div class="theory-box">
+      <div class="theory-heading">Wprowadzenie — automatyczne pobieranie danych ze stron www</div>
+      <p>Data Scraping to technika automatycznego wyodrebniania danych strukturalnych (tabelarycznych) ze stron internetowych. Zamiast recznie kopiowac dane wiersz po wierszu, robot pobiera cala tabele w kilka sekund.</p>
+
+      <p style="margin-top: 10px;"><strong>Typowe scenariusze w biznesie:</strong></p>
+      <ul class="bullets" style="margin-top: 6px;">
+        <li>Pobieranie kursow walut z NBP</li>
+        <li>Scrapowanie wynikow wyszukiwania (firmy, produkty, oferty)</li>
+        <li>Pobieranie danych z rejestrow publicznych (CEIDG, KRS, GUS)</li>
+        <li>Monitorowanie cen konkurencji</li>
+        <li>Zbieranie danych kontaktowych</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Kluczowe aktywnosci -->
+  <div class="section" id="m5-aktywnosci">
+    <h2 class="module-heading">Kluczowe aktywnosci</h2>
+    <div class="theory-box">
+      <table class="gen">
+        <tr><th>Aktywnosc</th><th>Opis</th><th>Kiedy uzywac</th></tr>
+        <tr><td><code>Extract Table Data</code> (NExtractData)</td><td>Pobieranie danych tabelarycznych ze stron</td><td>Gdy dane sa w formie tabeli (wiersze + kolumny)</td></tr>
+        <tr><td><code>Get Text</code></td><td>Pobieranie tekstu z konkretnego elementu</td><td>Gdy potrzebujesz jedna wartosc (np. naglowek, cene, date)</td></tr>
+        <tr><td><code>Get Attribute</code></td><td>Pobieranie atrybutu elementu HTML</td><td>Gdy potrzebujesz <code>href</code>, <code>src</code>, <code>value</code>, <code>class</code></td></tr>
+      </table>
+
+      <div class="theory-heading">Extract Table Data — jak to dziala pod spodem?</div>
+      <ol class="steps" style="margin-top: 8px;">
+        <li>Wskazujesz <strong>pierwszy element</strong> w tabeli (np. pierwsza komorke w pierwszym wierszu)</li>
+        <li>UiPath analizuje strukture HTML i probuje <strong>automatycznie</strong> rozpoznac:
+          <ul class="bullets" style="margin-top: 4px; margin-bottom: 4px;">
+            <li>Gdzie zaczynaja sie wiersze (<code>&lt;tr&gt;</code>)</li>
+            <li>Gdzie sa komorki (<code>&lt;td&gt;</code>)</li>
+            <li>Gdzie sa naglowki (<code>&lt;th&gt;</code>)</li>
+          </ul>
+        </li>
+        <li>Wskazujesz <strong>drugi element</strong> (kolejna komorka w tym samym wierszu) — UiPath potwierdza wzorzec</li>
+        <li>Konfiguracja: nazwy kolumn, typy, URL-e, limit rekordow</li>
+        <li>Wynik: <code>DataTable</code> z danymi</li>
+      </ol>
+
+      <div class="theory-heading">Konfiguracja kolumn w Extract Table Data</div>
+      <table class="gen">
+        <tr><th>Ustawienie</th><th>Opis</th></tr>
+        <tr><td>Column Name</td><td>Nazwa kolumny w wynikowym DataTable</td></tr>
+        <tr><td>Extract URL</td><td>Zaznacz jesli chcesz wyciagnac link (href) zamiast tekstu</td></tr>
+        <tr><td>Column Type</td><td>Typ danych kolumny</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Paginacja -->
+  <div class="section" id="m5-paginacja">
+    <h2 class="module-heading">Paginacja — pobieranie danych z wielu stron</h2>
+    <div class="theory-box">
+      <p>Wiele stron internetowych wyswietla dane na wielu stronach (np. 10 wynikow na strone). Extract Table Data obsluguje automatyczna paginacje:</p>
+
+      <table class="gen" style="margin-top: 12px;">
+        <tr><th>Parametr</th><th>Opis</th><th>Wartosc</th></tr>
+        <tr><td><code>MaximumResults</code></td><td>Maksymalna liczba rekordow do pobrania</td><td>np. <code>50</code>, <code>100</code></td></tr>
+        <tr><td><code>LimitExtractionTo</code></td><td>Limit typu</td><td><code>"Rows"</code></td></tr>
+        <tr><td><code>NextPageSelector</code></td><td>Selektor przycisku "Nastepna strona"</td><td>(konfigurowany w wizard)</td></tr>
+      </table>
+
+      <div class="theory-heading">Jak skonfigurowac paginacje</div>
+      <ol class="steps" style="margin-top: 8px;">
+        <li>W oknie Extract Table Data kliknij "Indicate Next Page"</li>
+        <li>Wskaz przycisk "Nastepna" / "Next" / "&gt;" na stronie</li>
+        <li>UiPath automatycznie bedzie klikal ten przycisk po pobraniu danych z biezacej strony</li>
+        <li>Pobieranie konczy sie gdy: osiagniety MaximumResults LUB przycisk "Nastepna" nie istnieje</li>
+      </ol>
+
+      <div class="warn" style="margin-top: 14px;"><strong>Uwaga:</strong> Paginacja wymaga stabilnego selektora przycisku "Nastepna strona". Jesli selektor zmienia sie miedzy stronami, uzyj Fuzzy.</div>
+    </div>
+  </div>
+
+  <!-- Porownanie metod -->
+  <div class="section" id="m5-porownanie">
+    <h2 class="module-heading">Porownanie metod pobierania danych</h2>
+    <div class="theory-box">
+      <table class="gen">
+        <tr><th>Metoda</th><th>Kiedy uzywac</th><th>Zalety</th><th>Wady</th></tr>
+        <tr><td><strong>Extract Table Data</strong></td><td>Dane tabelaryczne (wiersze x kolumny)</td><td>Szybki, automatyczny, obsluguje paginacje</td><td>Wymaga tabeli w HTML</td></tr>
+        <tr><td><strong>Get Text</strong> w petli</td><td>Dane rozproszone na stronie</td><td>Elastyczny</td><td>Wolny, wymaga recznego selektora</td></tr>
+        <tr><td><strong>HTTP Request</strong> + JSON</td><td>Dane z API</td><td>Najszybszy, najbardziej niezawodny</td><td>Wymaga znajomosci API</td></tr>
+        <tr><td><strong>Regex</strong> na Body</td><td>Parsowanie tekstu ze strony</td><td>Precyzyjny</td><td>Zlozony, lamliwy</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==================== CWICZENIA MODUL 5 ==================== -->
+
+  <!-- Cwiczenie Data Scraping CEIDG -->
+  <div class="section" id="m5-ceidg">
+    <h2 class="module-heading">Cwiczenia — Modul 5</h2>
+    <div class="exercise-card">
+      <div class="exercise-title">
+        <div>Cwiczenie: Data Scraping — CEIDG
+          <div class="goal">Extract Table Data | Filter Data Table | Sort Data Table | Keep vs Remove</div>
+        </div>
+      </div>
+      <div class="exercise-body">
+        <div>
+          <div class="label">Cel</div>
+          <p style="font-size:13.5px;">Scraping danych firmowych ze strony CEIDG, filtrowanie (usuniecie wpisow bez NIP/REGON), sortowanie i eksport do Excela.</p>
+        </div>
+        <div>
+          <div class="label">Czego sie nauczysz</div>
+          <div class="edu-list">
+            <div class="edu-item"><code>Extract Table Data</code> — konfiguracja kolumn, limit rekordow, paginacja</div>
+            <div class="edu-item"><code>Filter Data Table</code> z wieloma warunkami (OR) i trybem Remove</div>
+            <div class="edu-item"><code>Sort Data Table</code> — sortowanie alfabetyczne</div>
+            <div class="edu-item">Roznica miedzy trybem Keep a Remove w filtrze</div>
+          </div>
+        </div>
+        <div>
+          <div class="label">Filter Data Table — filtrowanie z wieloma warunkami</div>
+          <p style="font-size:13.5px;">W tym cwiczeniu Filter Data Table ma dwa warunki polaczone operatorem <strong>OR</strong>:</p>
+<pre style="margin-top: 8px;">Usun wiersze gdzie:
+  NIP jest puste     &larr; warunek 1
+  LUB                &larr; operator OR
+  Regon jest puste   &larr; warunek 2</pre>
+        </div>
+        <div>
+          <div class="label">Roznica Keep vs Remove</div>
+          <table class="gen">
+            <tr><th>Tryb</th><th>Opis</th><th>Efekt</th></tr>
+            <tr><td><strong>Keep</strong></td><td>Zostaw wiersze spelniajace warunek</td><td><code>Keep</code> + <code>NIP = ""</code> &rarr; zostawisz <strong>puste</strong> NIPy!</td></tr>
+            <tr><td><strong>Remove</strong></td><td>Usun wiersze spelniajace warunek</td><td><code>Remove</code> + <code>NIP = ""</code> &rarr; usuniesz puste NIPy (prawidlowo!)</td></tr>
+          </table>
+          <div class="warn" style="margin-top: 10px;"><strong>Pulapka:</strong> Latwo pomylic Keep z Remove. Czytaj warunek na glos: "USUN wiersze, w ktorych NIP jest puste" &rarr; Remove + <code>NIP = ""</code>.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DODATKOWE ZAGADNIENIA ==================== -->
+
+  <!-- Try-Catch -->
+  <div class="section" id="extra-trycatch">
+    <h2 class="module-heading">Try-Catch — obsluga bledow</h2>
+    <div class="theory-box">
+      <div class="theory-heading">Dlaczego bledy sa nieuniknione w RPA?</div>
+      <p>W przeciwienstwie do zwyklego programowania, roboty RPA operuja na <strong>zywych systemach</strong>: strony sie laduja wolno, pliki sa blokowane, elementy UI zmieniaja sie po aktualizacji, siec jest niestabilna. Dlatego obsluga bledow (Exception Handling) to nie "bonus" — to <strong>koniecznosc</strong>.</p>
+
+      <div class="theory-heading">Struktura Try-Catch</div>
+<pre>&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;          TRY                    &#9474;
+&#9474;  Kod, ktory MOZE wygenerowac   &#9474;
+&#9474;  blad (np. klikniecie, odczyt) &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+             &#8595; (jesli blad)
+&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;         CATCH                   &#9474;
+&#9474;  Co zrobic gdy blad WYSTAPI:    &#9474;
+&#9474;  - zaloguj blad                 &#9474;
+&#9474;  - powiadom uzytkownika         &#9474;
+&#9474;  - wykonaj akcje naprawcza      &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+             &#8595; (zawsze)
+&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474;        FINALLY                  &#9474;
+&#9474;  ZAWSZE wykonywany:            &#9474;
+&#9474;  - zamknij polaczenie           &#9474;
+&#9474;  - zwolnij zasoby              &#9474;
+&#9474;  - wyczysc zmienne tymczasowe  &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</pre>
+
+      <div class="theory-heading">Bloki Try-Catch</div>
+      <ul class="bullets">
+        <li><strong>Try</strong> — kod, ktory moze wygenerowac blad</li>
+        <li><strong>Catch</strong> — co zrobic gdy blad wystapi (log, powiadomienie, akcja naprawcza). Mozesz miec wiele blokow Catch dla roznych typow wyjatkow</li>
+        <li><strong>Finally</strong> — zawsze wykonywany (czyszczenie, zamkniecie polaczen) — niezaleznie czy byl blad czy nie</li>
+      </ul>
+
+      <div class="theory-heading">Kiedy uzywac Try-Catch</div>
+      <table class="gen">
+        <tr><th>Scenariusz</th><th>Dlaczego?</th><th>Przyklad</th></tr>
+        <tr><td>Operacje na plikach</td><td>Plik moze nie istniec, byc zablokowany</td><td>Read Range, Move File</td></tr>
+        <tr><td>Polaczenia sieciowe</td><td>Serwer moze nie odpowiadac, timeout</td><td>HTTP Request, Get IMAP</td></tr>
+        <tr><td>Automatyzacja UI</td><td>Element moze nie byc dostepny, zmienil sie selektor</td><td>Click, Type Into, Get Text</td></tr>
+        <tr><td>Parsowanie danych</td><td>Dane moga miec nieoczekiwany format</td><td>cint(), DateTime.Parse</td></tr>
+        <tr><td>Operacje na email</td><td>Serwer SMTP moze odrzucic polaczenie</td><td>Send SMTP Mail Message</td></tr>
+      </table>
+
+      <div class="theory-heading">Typowe typy wyjatkow w UiPath</div>
+      <table class="gen">
+        <tr><th>Wyjatek</th><th>Kiedy</th><th>Przyklad</th></tr>
+        <tr><td><code>SelectorNotFoundException</code></td><td>Element UI nie znaleziony</td><td>Strona sie nie zaladowala</td></tr>
+        <tr><td><code>TimeoutException</code></td><td>Przekroczony czas oczekiwania</td><td>Wolne polaczenie</td></tr>
+        <tr><td><code>NullReferenceException</code></td><td>Zmienna = Nothing</td><td>Niezainicjalizowany DataTable</td></tr>
+        <tr><td><code>InvalidCastException</code></td><td>Blad konwersji typu</td><td><code>cint("abc")</code></td></tr>
+        <tr><td><code>IOException</code></td><td>Plik zablokowany/nieistniejacy</td><td>Read Range na otwartym pliku</td></tr>
+        <tr><td><code>BusinessRuleException</code></td><td>Blad biznesowy (rzucony celowo)</td><td>NIP nieprawidlowy</td></tr>
+      </table>
+
+      <div class="theory-heading">Obiekt Exception — co zawiera</div>
+<pre>exception.Message      ' Tekst bledu: "Cannot find UI element..."
+exception.Source       ' Zrodlo: nazwa aktywnosci
+exception.GetType.Name ' Typ wyjatku: "SelectorNotFoundException"
+exception.StackTrace   ' Pelna sciezka bledu (dla deweloperow)</pre>
+    </div>
+  </div>
+
+  <!-- UI Explorer -->
+  <div class="section" id="extra-uiexplorer">
+    <h2 class="module-heading">UI Explorer — narzedzie do analizy selektorow</h2>
+    <div class="theory-box">
+      <p>UI Explorer to narzedzie do "rentgenowania" elementow UI — pokazuje co robot "widzi" na ekranie i jakie atrybuty ma kazdy element.</p>
+
+      <div class="theory-heading">Kiedy go uzywac</div>
+      <ul class="bullets">
+        <li>Selektor automatycznie wygenerowany przez UiPath nie dziala</li>
+        <li>Chcesz zrozumiec strukture UI (jakie atrybuty ma element?)</li>
+        <li>Potrzebujesz dynamicznego selektora (musisz wiedziec, ktory atrybut jest zmienny)</li>
+        <li>Debugujesz problem z kliknieciem na niewlasciwy element</li>
+      </ul>
+
+      <div class="theory-heading">Mozliwosci</div>
+      <ul class="bullets">
+        <li>Przegladanie hierarchii elementow (drzewo UI)</li>
+        <li>Testowanie selektorow (Validate &rarr; sprawdz czy selektor znajduje element)</li>
+        <li>Dodawanie/edytowanie atrybutow selektora</li>
+        <li>Porownywanie selektorow (dwa elementy obok siebie)</li>
+      </ul>
+
+      <div class="theory-heading">Jak otworzyc UI Explorer</div>
+      <ol class="steps">
+        <li>W UiPath Studio: <code>Design &rarr; Launch UI Explorer</code> (lub <code>Ctrl+F6</code>)</li>
+        <li>W aktywnosci (np. Click): kliknij selektor &rarr; "Open in UI Explorer"</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- Aktywnosci sterowania -->
+  <div class="section" id="extra-sterowanie">
+    <h2 class="module-heading">Aktywnosci sterowania przeplywem</h2>
+    <div class="theory-box">
+      <table class="gen">
+        <tr><th>Aktywnosc</th><th>Opis</th><th>Kiedy uzywac</th><th>Przyklad</th></tr>
+        <tr><td><code>Retry Scope</code></td><td>Ponawia akcje X razy do momentu spelnienia warunku</td><td>Element laduje sie wolno, siec niestabilna</td><td>Retry 3x: Click "Login" &rarr; Condition: "Dashboard" Exists</td></tr>
+        <tr><td><code>Check App State</code></td><td>Sprawdza czy dany element UI istnieje</td><td>Walidacja stanu strony po akcji</td><td>Czy po kliknieciu "Szukaj" pojawily sie wyniki?</td></tr>
+        <tr><td><code>Repeat N Times</code></td><td>Powtarza aktywnosci dokladnie X razy</td><td>Paginacja, wielokrotne akcje</td><td>Kliknij "Nastepna strona" 5 razy</td></tr>
+        <tr><td><code>Delay</code></td><td>Czeka okreslony czas</td><td>Ostatecznosc — gdy nie ma lepszego sposobu</td><td>Czekaj 3s na zaladowanie strony</td></tr>
+        <tr><td><code>Wait for Download</code></td><td>Czeka na pobranie pliku</td><td>Pobieranie raportow ze stron</td><td>Download &rarr; Wait &rarr; Process file</td></tr>
+      </table>
+
+      <div class="theory-heading">Retry Scope vs Delay — dlaczego Retry jest lepszy</div>
+<pre>' ZLE — Delay (zgadywanie czasu):
+Delay 5 sekund    &larr; co jesli strona laduje sie 2s? Marnujesz 3s.
+Click "Login"      &larr; co jesli strona laduje sie 10s? Blad!
+
+' DOBRE — Retry Scope (inteligentne ponawianie):
+Retry 3 razy, co 2 sekundy:
+  Click "Login"
+  Condition: Element "Dashboard" Exists</pre>
+
+      <p style="margin-top: 12px;">Retry Scope probuje akcje, sprawdza warunek, i jesli niespelniony — czeka i probuje ponownie. Lepsze niz Delay bo:</p>
+      <ol class="steps" style="margin-top: 6px;">
+        <li>Nie marnuje czasu (jesli zadziala za pierwszym razem)</li>
+        <li>Daje szanse na sukces (jesli pierwsza proba sie nie uda)</li>
+        <li>Kontrolowany limit prob (nie czeka w nieskonczonosc)</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- Kolekcje -->
+  <div class="section" id="extra-kolekcje">
+    <h2 class="module-heading">Array vs List vs Dictionary — podsumowanie kolekcji</h2>
+    <div class="theory-box">
+      <table class="gen">
+        <tr><th>Typ</th><th>Rozmiar</th><th>Dodawanie elementow</th><th>Dostep</th><th>Inicjalizacja</th><th>Typowe zastosowanie</th></tr>
+        <tr><td><code>Array</code></td><td>Staly</td><td>Niemozliwe</td><td>Po indeksie: <code>arr(0)</code></td><td><code>{"A", "B", "C"}</code></td><td>Dni tygodnia, stale listy</td></tr>
+        <tr><td><code>List</code></td><td>Dynamiczny</td><td><code>Add To Collection</code></td><td>Po indeksie: <code>lst(0)</code></td><td><code>New List(Of String)</code></td><td>Emaile, pliki, wyniki filtrowania</td></tr>
+        <tr><td><code>Dictionary</code></td><td>Dynamiczny</td><td><code>dict("key") = val</code></td><td>Po kluczu: <code>dict("EUR")</code></td><td><code>New Dictionary(Of String, String)</code></td><td>Mapowanie (kod &rarr; nazwa), konfiguracja</td></tr>
+      </table>
+
+      <div class="theory-heading">Kiedy co wybrac — praktyczne reguly</div>
+<pre>Mam stala liste 7 dni tygodnia?          &rarr; Array
+Nie wiem ile emaili pobiore?              &rarr; List
+Musze szybko szukac po kluczu (np. NIP)?  &rarr; Dictionary
+Dane tabelaryczne (wiersze x kolumny)?    &rarr; DataTable</pre>
+    </div>
+  </div>
+
+  <!-- ==================== TYPOWE PROBLEMY ==================== -->
+
+  <div class="section" id="problemy">
+    <h2 class="module-heading">Typowe problemy i rozwiazania</h2>
+    <div class="theory-box">
+      <table class="gen">
+        <tr><th>Problem</th><th>Przyczyna</th><th>Rozwiazanie</th></tr>
+        <tr><td>Blad autoryzacji Gmail</td><td>Google wymaga App Password, nie hasla konta</td><td>Wygeneruj App Password w Google Account</td></tr>
+        <tr><td><code>Get Credential</code> nie dziala</td><td>Brak asseta w Orchestratorze lub zla nazwa</td><td>Sprawdz AssetName i FolderPath</td></tr>
+        <tr><td>IMAP zwraca pusta liste</td><td>Zly folder, brak emaili, filtr OnlyUnread</td><td>Sprawdz MailFolder, wylacz OnlyUnreadMessages</td></tr>
+        <tr><td>Zalacznik nie dolaczony</td><td>Zla sciezka do pliku</td><td>Uzyj Path.Combine + Environment.CurrentDirectory</td></tr>
+        <tr><td>Extract Table Data pusta</td><td>Strona nie zaladowala sie przed scrapingiem</td><td>Dodaj Check App State przed Extract</td></tr>
+        <tr><td>Filter Data Table — zle wyniki</td><td>Pomylenie Keep z Remove</td><td>Czytaj warunek na glos: "USUN wiersze gdzie..."</td></tr>
+        <tr><td><code>NullReferenceException</code> w petli</td><td>Email bez Subject lub bez From</td><td>Dodaj warunek: <code>If currentMail.Subject IsNot Nothing</code></td></tr>
+        <tr><td><code>.Split(" ").Last()</code> — zly wynik</td><td>Temat emaila ma inny format niz oczekiwany</td><td>Sprawdz <code>.Subject</code> w logach przed parsowaniem</td></tr>
+      </table>
+    </div>
+  </div>
+
+<!-- FOOTER -->
+<div class="material-footer">
+  <img src="logo.png" alt="Robotivity" style="height:36px; vertical-align:middle; margin-bottom:6px;"><br>
+  Szkolenie przygotowane przez <strong>Robotivity&reg;</strong> — Autoryzowany Partner UiPath<br>
+  info@robotivity.pl &nbsp;&middot;&nbsp; www.Robotivity.pl &nbsp;&middot;&nbsp; tel.: +48 690 020 576
+</div>
+
+</main>
+
+<script>
+  const sections = document.querySelectorAll('.section[id]');
+  const navItems = document.querySelectorAll('.nav-item');
+  function onScroll() {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) current = s.id; });
+    navItems.forEach(a => { a.classList.toggle('active', a.getAttribute('href') === '#' + current); });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  navItems.forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+  function filterNav(query) {
+    const q = query.toLowerCase();
+    navItems.forEach(a => { const match = a.textContent.toLowerCase().includes(q); a.style.display = (q === '' || match) ? '' : 'none'; });
+    document.querySelectorAll('.nav-module, .nav-day').forEach(el => { el.style.display = (q === '') ? '' : 'none'; });
+  }
+</script>
+</body>
+</html>
