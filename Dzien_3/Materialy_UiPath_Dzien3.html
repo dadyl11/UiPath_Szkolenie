@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Materialy szkoleniowe — UiPath Dzien 3</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --navy: #1e4d8c; --blue: #5b9bd5; --light: #eaf3fb; --border: #cde0f5; --text: #222; --muted: #666; --sidebar-w: 270px; }
+body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px; line-height: 1.65; color: var(--text); background: #f4f8fd; display: flex; }
+#sidebar { width: var(--sidebar-w); min-height: 100vh; background: #0f2744; position: fixed; top: 0; left: 0; bottom: 0; overflow-y: auto; display: flex; flex-direction: column; z-index: 50; }
+.sidebar-header { padding: 20px 16px 14px; border-bottom: 1px solid #1e4d8c; }
+.sidebar-header .title { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.3; }
+.sidebar-header .sub { font-size: 11px; color: #5b9bd5; margin-top: 3px; }
+.sidebar-search { padding: 10px 12px; border-bottom: 1px solid #1a3a60; }
+.sidebar-search input { width: 100%; background: #1a3a60; border: 1px solid #2a5a90; border-radius: 4px; padding: 6px 10px; color: #d0e8f8; font-size: 12px; outline: none; }
+.sidebar-search input::placeholder { color: #5b7a9a; }
+.sidebar-search input:focus { border-color: #5b9bd5; }
+nav { flex: 1; padding: 8px 0 20px; }
+.nav-day { padding: 10px 16px 4px; font-size: 10px; font-weight: 700; color: #5b9bd5; text-transform: uppercase; letter-spacing: 1.5px; }
+.nav-module { padding: 7px 16px 3px; font-size: 11px; font-weight: 700; color: #7fb3e0; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 4px; }
+.nav-item { display: block; padding: 6px 16px 6px 24px; font-size: 12.5px; color: #a0c0e0; text-decoration: none; border-left: 3px solid transparent; transition: all 0.12s; cursor: pointer; line-height: 1.35; }
+.nav-item:hover { color: #fff; background: rgba(91,155,213,0.1); border-left-color: #5b9bd5; }
+.nav-item.active { color: #fff; background: rgba(91,155,213,0.18); border-left-color: #5b9bd5; font-weight: 600; }
+.nav-item.exercise { padding-left: 34px; font-size: 12px; }
+#main { margin-left: var(--sidebar-w); flex: 1; padding: 32px 40px 60px; max-width: 860px; }
+.section { margin-bottom: 48px; }
+.day-divider { background: var(--navy); color: #fff; padding: 14px 22px; border-radius: 6px; margin-bottom: 28px; font-size: 17px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.module-heading { font-size: 16px; font-weight: 700; color: var(--navy); border-left: 4px solid var(--blue); padding-left: 12px; margin-bottom: 14px; }
+.exercise-card { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 24px; background: #fff; }
+.exercise-title { background: var(--blue); color: #fff; font-weight: 700; font-size: 13.5px; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; }
+.exercise-title .goal { font-size: 11.5px; font-weight: 400; color: #d0e8f8; margin-top: 2px; }
+.exercise-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 14px; }
+.theory-box { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 16px 18px; margin-bottom: 20px; }
+.label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--navy); margin-bottom: 6px; }
+.steps { padding-left: 20px; }
+.steps li { margin-bottom: 5px; font-size: 13.5px; }
+.steps li::marker { color: var(--blue); font-weight: 700; }
+.bullets { padding-left: 18px; }
+.bullets li { margin-bottom: 4px; font-size: 13.5px; }
+.edu-list { display: flex; flex-direction: column; gap: 5px; }
+.edu-item { background: var(--light); border-left: 3px solid var(--blue); padding: 6px 12px; border-radius: 0 4px 4px 0; font-size: 13px; color: #1a3a60; }
+.var-table { width: 100%; border-collapse: collapse; font-size: 12.5px; font-family: 'Consolas', 'Courier New', monospace; }
+.var-table th { background: var(--navy); color: #fff; padding: 5px 10px; text-align: left; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif; font-size: 11px; }
+.var-table tr:nth-child(even) { background: var(--light); }
+.var-table td { padding: 5px 10px; border-bottom: 1px solid var(--border); }
+table.gen { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.gen th { background: var(--navy); color: #fff; padding: 7px 12px; text-align: left; font-weight: 600; }
+table.gen tr:nth-child(even) { background: var(--light); }
+table.gen td { padding: 6px 12px; border-bottom: 1px solid var(--border); }
+code { background: var(--light); color: var(--navy); padding: 1px 5px; border-radius: 3px; font-family: 'Consolas', 'Courier New', monospace; font-size: 12px; border: 1px solid var(--border); }
+pre { background: #f0f6ff; border: 1px solid var(--border); border-radius: 5px; padding: 12px 14px; font-family: 'Consolas', 'Courier New', monospace; font-size: 12.5px; color: var(--navy); white-space: pre-wrap; word-break: break-word; }
+.tip { background: #e8f4fd; border-left: 3px solid var(--blue); padding: 9px 13px; border-radius: 0 5px 5px 0; font-size: 13px; color: #1a3a60; }
+.warn { background: #fff8e1; border-left: 3px solid #f9a825; padding: 9px 13px; border-radius: 0 5px 5px 0; font-size: 13px; color: #5a4000; }
+.warn strong, .tip strong { color: inherit; font-weight: 700; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.badge { display: inline-block; background: var(--blue); color: #fff; font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 10px; vertical-align: middle; margin-right: 3px; }
+.badge.green { background: #2e7d32; }
+.badge.red { background: #c62828; }
+.badge.orange { background: #e65100; }
+strong { color: var(--navy); }
+.theory-heading { font-size: 13px; font-weight: 700; color: var(--navy); margin: 16px 0 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+.info { background: #e8f5e9; border-left: 3px solid #2e7d32; padding: 9px 13px; border-radius: 0 5px 5px 0; font-size: 13px; color: #1b5e20; }
+/* Header */
+.material-header { display: flex; align-items: center; gap: 24px; border-bottom: 3px solid var(--blue); padding-bottom: 18px; margin-bottom: 28px; }
+.material-header img { height: 64px; width: auto; flex-shrink: 0; }
+.material-header-text h1 { font-size: 20px; color: var(--navy); font-weight: 700; margin-bottom: 2px; }
+.material-header-text .subtitle { font-size: 13px; color: var(--blue); font-weight: 600; }
+.material-header-text .subtitle-small { font-size: 11px; color: #999; margin-top: 2px; }
+/* Footer */
+.material-footer { text-align: center; font-size: 12px; color: #999; border-top: 2px solid var(--light); margin-top: 40px; padding-top: 16px; }
+.material-footer strong { color: var(--navy); }
+
+@page { margin: 10mm 0 10mm 0; }
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+  body { background: #fff; }
+  #sidebar { display: none; }
+  #main { margin-left: 0; padding: 20px 30px; max-width: 100%; }
+  .material-header img { height: 50px; }
+  .exercise-card, table.gen, .var-table, pre, .tip, .warn, .info, .edu-item { page-break-inside: avoid; break-inside: avoid; }
+  .module-heading, .theory-heading, .day-divider, .label { page-break-after: avoid; break-after: avoid; }
+  .theory-box { page-break-before: auto; break-before: auto; }
+  .material-footer { page-break-before: avoid; break-before: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<aside id="sidebar">
+  <div class="sidebar-header">
+    <div class="title">Materialy szkoleniowe — UiPath Dzien 3</div>
+    <div class="sub">Szkolenie UiPath | Materialy dla uczestnika</div>
+  </div>
+  <div class="sidebar-search">
+    <input type="text" placeholder="Szukaj w materialach..." oninput="filterNav(this.value)">
+  </div>
+  <nav>
+    <div class="nav-day">Dzien 3 — Materialy szkoleniowe</div>
+
+    <div class="nav-module">Modul 1 — Pliki i foldery</div>
+    <a class="nav-item" href="#m1-operacje">Operacje na plikach w RPA</a>
+    <a class="nav-item" href="#m1-fileinfo">FileInfo i DirectoryInfo</a>
+    <a class="nav-item" href="#m1-pathcombine">Path.Combine</a>
+    <a class="nav-item" href="#m1-aktywnosci">Kluczowe aktywnosci</a>
+
+    <div class="nav-module">Cwiczenia — Modul 1</div>
+    <a class="nav-item exercise" href="#m1-zad1">Zad. 1 — Kopiowanie pliku</a>
+    <a class="nav-item exercise" href="#m1-zad2">Zad. 2 — Rozpakowanie ZIP</a>
+    <a class="nav-item exercise" href="#m1-zad3">Zad. 3 — Sortowanie plikow</a>
+
+    <div class="nav-module">Modul 2 — Flowchart</div>
+    <a class="nav-item" href="#m2-teoria">Teoria — Flowchart</a>
+    <a class="nav-item" href="#m2-porownanie">Flowchart vs Sequence</a>
+    <a class="nav-item" href="#m2-elementy">Elementy Flowchart</a>
+
+    <div class="nav-module">Cwiczenia — Modul 2</div>
+    <a class="nav-item exercise" href="#m2-cw1">Cw. — Weryfikacja NIP (CEIDG)</a>
+
+    <div class="nav-module">Modul 3 — Orchestrator</div>
+    <a class="nav-item" href="#m3-czym">Czym jest Orchestrator?</a>
+    <a class="nav-item" href="#m3-assety">Assety</a>
+    <a class="nav-item" href="#m3-kolejki">Kolejki (Queues)</a>
+    <a class="nav-item" href="#m3-aktywnosci-kolejek">Aktywnosci kolejek</a>
+    <a class="nav-item" href="#m3-dispatcher">Wzorzec Dispatcher-Performer</a>
+    <a class="nav-item" href="#m3-trycatch">Try Catch vs Retry Scope</a>
+    <a class="nav-item" href="#m3-logi">Logi Orchestratora</a>
+
+    <div class="nav-module">Cwiczenia — Modul 3</div>
+    <a class="nav-item exercise" href="#m3-zad1">Zad. 1 — Logowanie z Orchestratora</a>
+    <a class="nav-item exercise" href="#m3-zad2">Zad. 2 — Dispatcher</a>
+    <a class="nav-item exercise" href="#m3-zad3">Zad. 3 — Performer</a>
+
+    <div class="nav-module">Modul 4 — State Machine</div>
+    <a class="nav-item" href="#m4-czym">Czym jest State Machine?</a>
+    <a class="nav-item" href="#m4-elementy">Elementy State Machine</a>
+    <a class="nav-item" href="#m4-kiedy">Kiedy State Machine?</a>
+
+    <div class="nav-module">Cwiczenia — Modul 4</div>
+    <a class="nav-item exercise" href="#m4-cw1">Cw. — Input Dialog</a>
+
+    <div class="nav-module">Przydatne</div>
+    <a class="nav-item" href="#debug">Debugowanie</a>
+    <a class="nav-item" href="#problemy">Typowe problemy</a>
+  </nav>
+</aside>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main id="main">
+
+<!-- HEADER -->
+<div class="material-header">
+  <img src="logo.png" alt="Robotivity logo">
+  <div class="material-header-text">
+    <h1>Materialy szkoleniowe — UiPath Dzien 3</h1>
+    <div class="subtitle">Autoryzowany Partner UiPath</div>
+    <div class="subtitle-small">info@robotivity.pl &nbsp;&middot;&nbsp; www.Robotivity.pl &nbsp;&middot;&nbsp; tel.: +48 690 020 576</div>
+  </div>
+</div>
+
+<!-- ==================== DAY 3 HEADER ==================== -->
+<div class="day-divider">Dzien 3 — Pliki i foldery, Flowchart, Orchestrator, State Machine</div>
+
+<!-- ==================== MODULE 1 ==================== -->
+<div class="section" id="m1-operacje">
+  <div class="module-heading">Modul 1 — Pliki i foldery</div>
+  <div class="theory-box">
+    <div class="label">Operacje na plikach z perspektywy RPA</div>
+    <p style="margin-bottom:10px;">Robot RPA operuje na plikach i folderach dokladnie tak, jak uzytkownik komputera — kopiuje, przenosi, tworzy i usuwa. Roznica polega na tym, ze robot nie widzi eksploratora plikow — musi znac dokladne sciezki i poslugiwac sie dedykowanymi aktywnosciami.</p>
+
+    <div class="theory-heading">Najwazniejsze zasady pracy z plikami w RPA</div>
+    <ul class="bullets">
+      <li><strong>Nigdy nie hardkoduj sciezek bezwzglednych</strong> (np. <code>C:\Users\Jan\Dokumenty\...</code>) — zamiast tego uzywaj <code>Environment.CurrentDirectory</code> lub assetow z Orchestratora. Robot moze dzialac na innej maszynie niz ta, na ktorej go programujesz.</li>
+      <li><strong>Zawsze weryfikuj istnienie pliku/folderu</strong> przed operacja — uzywaj <code>Path Exists</code>, aby uniknac wyjatkow w runtime.</li>
+      <li><strong>Pamietaj o blokadach plikow</strong> — jesli plik Excel jest otwarty w tle (przez uzytkownika lub inny proces), robot nie bedzie mogl go odczytac ani zapisac. Dlatego dobra praktyka to <code>Kill Process "excel"</code> na poczatku procesu.</li>
+      <li><strong>Uprawnienia</strong> — robot dziala w kontekscie konta uzytkownika (lub konta serwisowego). Jesli konto nie ma uprawnien do danego folderu, robot dostanie wyjatek <code>UnauthorizedAccessException</code>.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- FileInfo i DirectoryInfo -->
+<div class="section" id="m1-fileinfo">
+  <div class="theory-box">
+    <div class="label">FileInfo i DirectoryInfo — dlaczego nie String?</div>
+    <p style="margin-bottom:10px;">W UiPath aktywnosc <code>For Each File in Folder</code> zwraca zmienna <code>CurrentFile</code> typu <code>FileInfo</code> (nie <code>String</code>). To typ z biblioteki .NET (<code>System.IO.FileInfo</code>), ktory jest "inteligentnym opakowaniem" na sciezke pliku.</p>
+
+    <div class="theory-heading">Dlaczego to wazne</div>
+    <ul class="bullets">
+      <li><strong>String</strong> to po prostu tekst — np. <code>"C:\Dane\Raport.xlsx"</code>. Zeby wyciagnac z niego nazwe pliku, musisz recznie parsowac tekst.</li>
+      <li><strong>FileInfo</strong> to obiekt, ktory "zna" swoj plik — udostepnia gotowe wlasciwosci: Name, Extension, FullName, Folder, SizeInKB, CreationTime, LastWriteTime.</li>
+      <li><strong>DirectoryInfo</strong> to analogiczny obiekt dla folderow — udostepnia: FullName, Name, Parent, CreationTime.</li>
+    </ul>
+
+    <div class="tip" style="margin-top:12px;"><strong>Wskazowka:</strong> W praktyce uzywaj wlasciwosci <code>CurrentFile.*</code> zamiast recznego parsowania sciezek — jest bezpieczniej i czytelniej.</div>
+
+    <div class="theory-heading">Wlasciwosci FileInfo</div>
+    <table class="gen">
+      <tr><th>Wlasciwosc (FileInfo)</th><th>Opis</th><th>Przyklad</th></tr>
+      <tr><td><code>CurrentFile.Name</code></td><td>Pelna nazwa pliku z rozszerzeniem</td><td><code>Raport.xlsx</code></td></tr>
+      <tr><td><code>CurrentFile.FullName</code></td><td>Pelna sciezka</td><td><code>C:\Dane\Raport.xlsx</code></td></tr>
+      <tr><td><code>CurrentFile.Extension</code></td><td>Rozszerzenie</td><td><code>.xlsx</code></td></tr>
+      <tr><td><code>CurrentFile.Folder</code></td><td>Sciezka katalogu</td><td><code>C:\Dane</code></td></tr>
+      <tr><td><code>CurrentFile.SizeInKB</code></td><td>Rozmiar w KB</td><td><code>12.5</code></td></tr>
+      <tr><td><code>CurrentFile.CreationTime</code></td><td>Data utworzenia</td><td><code>2024-01-15 10:30:00</code></td></tr>
+      <tr><td><code>CurrentFile.LastWriteTime</code></td><td>Data ostatniej modyfikacji</td><td><code>2024-06-20 14:22:00</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- Path.Combine -->
+<div class="section" id="m1-pathcombine">
+  <div class="theory-box">
+    <div class="label">Path.Combine — dlaczego nie laczyc sciezek recznie?</div>
+
+    <div class="theory-heading">Typowy blad poczatkujacych</div>
+    <pre>str_sciezka = str_folder + "\" + str_plik</pre>
+
+    <p style="margin:10px 0;">Problem: co jesli <code>str_folder</code> juz konczy sie na <code>\</code>? Wtedy dostaniesz podwojny separator: <code>C:\Dane\\Raport.xlsx</code>. Albo co jesli pracujesz na systemie, ktory uzywa <code>/</code> (Linux/Mac)?</p>
+
+    <div class="info" style="margin-bottom:10px;"><strong>Rozwiazanie:</strong> <code>Path.Combine(str_folder, str_plik)</code> — automatycznie dodaje separator, tylko gdy jest potrzebny, i uzywa odpowiedniego separatora dla systemu operacyjnego.</div>
+
+    <pre>Path.Combine("C:\Dane", "Raport.xlsx")    → "C:\Dane\Raport.xlsx"
+Path.Combine("C:\Dane\", "Raport.xlsx")   → "C:\Dane\Raport.xlsx"  (brak podwojnego \)</pre>
+  </div>
+</div>
+
+<!-- Kluczowe aktywnosci -->
+<div class="section" id="m1-aktywnosci">
+  <div class="theory-box">
+    <div class="label">Kluczowe aktywnosci</div>
+    <table class="gen">
+      <tr><th>Aktywnosc</th><th>Opis</th><th>Wazne wlasciwosci</th></tr>
+      <tr><td><strong>For Each File in Folder</strong></td><td>Iteruje po plikach w folderze</td><td>Filter (np. <code>*.xlsx</code>), IncludeSubDirectories, OrderBy</td></tr>
+      <tr><td><strong>Copy File</strong></td><td>Kopiuje plik do wskazanej lokalizacji</td><td>Path, Destination, Overwrite</td></tr>
+      <tr><td><strong>Move File</strong></td><td>Przenosi plik (wycina + wkleja)</td><td>Path, Destination</td></tr>
+      <tr><td><strong>Path Exists</strong></td><td>Sprawdza czy plik/folder istnieje</td><td>Path, PathType (File/Folder), zwraca Boolean</td></tr>
+      <tr><td><strong>Create Folder</strong></td><td>Tworzy nowy katalog</td><td>Path, Output → ILocalResource</td></tr>
+      <tr><td><strong>Extract/Unzip Files</strong></td><td>Rozpakowuje archiwum ZIP</td><td>FileToExtract, ExtractToADedicatedFolder, DestinationFolderInfo → DirectoryInfo</td></tr>
+      <tr><td><strong>Select Folder</strong></td><td>Okno dialogowe wyboru folderu</td><td>SelectedFolder → String</td></tr>
+      <tr><td><strong>Get Environment Variable</strong></td><td>Pobiera zmienna srodowiskowa</td><td>Variable=CurrentDirectory → biezacy katalog projektu</td></tr>
+    </table>
+
+    <div class="theory-heading">Dodatkowe aktywnosci</div>
+    <ul class="bullets">
+      <li><strong>Build Data Table</strong> — tworzy pusta tabele z predefiniowanymi kolumnami (edytor wizualny). Przydatne gdy chcemy recznie budowac raport.</li>
+      <li><strong>Modify Text</strong> — aktywnosc do manipulacji tekstem w pipeline (Find and Replace, ToUpper/ToLower). Alternatywa dla wyrazen VB.NET.</li>
+      <li><strong>Write CSV</strong> — zapisuje DataTable do pliku CSV. Wlasciwosci: FilePath, DataTable, Delimitator, AddHeaders.</li>
+      <li><strong>Switch</strong> — odpowiednik switch/case. Pozwala zdefiniowac wiele sciezek na podstawie jednej wartosci. Typ generyczny (np. <code>Switch&lt;String&gt;</code>). Posiada sekcje Default dla nieobsluzonych wartosci.</li>
+    </ul>
+
+    <div class="theory-heading">Wyrazenia VB.NET przydatne w module</div>
+    <pre>Path.Combine(folder, "plik.txt")     ' laczy sciezki bezpiecznie
+Environment.CurrentDirectory          ' biezacy katalog robota
+CurrentFile.Extension.Replace(".",Nothing).ToUpper  ' rozszerzenie bez kropki, wielkie litery</pre>
+  </div>
+</div>
+
+<!-- ==================== EXERCISES MODULE 1 ==================== -->
+<div class="section" id="m1-zad1">
+  <div class="module-heading">Cwiczenia — Modul 1</div>
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Zadanie 1 — Kopiowanie pliku<div class="goal">Cel: Skopiuj plik Produkty.xlsx do folderu wybranego przez uzytkownika i sprawdz czy kopiowanie sie powiodlo.</div></div>
+    </div>
+    <div class="exercise-body">
+      <div class="label">Czego sie nauczysz</div>
+      <div class="edu-list">
+        <div class="edu-item"><code>Get Environment Variable</code> z opcja <code>CurrentDirectory</code> — alternatywa dla hardkodowania sciezek</div>
+        <div class="edu-item"><code>Select Folder</code> — interakcja z uzytkownikiem (okno dialogowe systemowe)</div>
+        <div class="edu-item"><code>Path.Combine</code> — bezpieczne laczenie sciezek</div>
+        <div class="edu-item"><code>Path Exists</code> — walidacja operacji plikowych</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="m1-zad2">
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Zadanie 2 — Rozpakowanie ZIP i raport CSV<div class="goal">Cel: Rozpakuj Raporty.zip, zbierz szczegoly plikow (nazwa, folder, rozszerzenie, rozmiar) do DataTable i zapisz jako CSV.</div></div>
+    </div>
+    <div class="exercise-body">
+      <div class="label">Czego sie nauczysz</div>
+      <div class="edu-list">
+        <div class="edu-item"><code>Extract/Unzip Files</code> — rozpakowywanie archiwow z opcja <code>ExtractToADedicatedFolder</code></div>
+        <div class="edu-item"><code>DirectoryInfo</code> vs <code>String</code> — DirectoryInfo daje dostep do metadanych folderu</div>
+        <div class="edu-item"><code>Modify Text</code> — pipeline do transformacji tekstu (Find&amp;Replace + ToUpper)</div>
+        <div class="edu-item"><code>Build Data Table</code> + <code>Add Data Row</code> — reczne budowanie tabel</div>
+        <div class="edu-item"><code>Write CSV</code> — eksport danych do formatu CSV</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="m1-zad3">
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Zadanie 3 — Sortowanie plikow wg rozszerzenia<div class="goal">Cel: W katalogu z plikami stworz foldery PDF, DOCX, XLSX i przeniesc pliki do odpowiednich folderow.</div></div>
+    </div>
+    <div class="exercise-body">
+      <div class="label">Czego sie nauczysz</div>
+      <div class="edu-list">
+        <div class="edu-item"><code>Array of String</code> — inicjalizacja: <code>{"PDF", "DOCX", "XLSX"}</code></div>
+        <div class="edu-item"><code>Switch</code> — wielogaleziowe rozgalezienie (lepsze niz zagniezodzone If/Else)</div>
+        <div class="edu-item"><code>Move File</code> vs <code>Copy File</code> — Move przenosi (usuwa zrodlo), Copy zostawia oryginal</div>
+        <div class="edu-item"><code>ILocalResource</code> — typ zwracany przez <code>Create Folder</code>, ma metode <code>.GetName</code></div>
+        <div class="edu-item">Default w Switch — sekcja dla nieobsluzonych przypadkow</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MODULE 2 ==================== -->
+<div class="section" id="m2-teoria">
+  <div class="module-heading">Modul 2 — Flowchart: Biala Lista (CEIDG)</div>
+  <div class="theory-box">
+    <div class="label">Teoria — Flowchart</div>
+
+    <div class="theory-heading">Czym jest Flowchart w UiPath?</div>
+    <p style="margin-bottom:10px;">Flowchart to drugi (obok Sequence) podstawowy typ kontenera w UiPath. O ile Sequence wykonuje aktywnosci liniowo — jedna po drugiej, z gory na dol — o tyle Flowchart pozwala na swobodne laczenie elementow strzalkami w dowolnych kierunkach.</p>
+
+    <div class="theory-heading">Flowchart najlepiej sprawdza sie, gdy:</div>
+    <ul class="bullets">
+      <li>Proces ma <strong>wiele rozgalezien</strong> (wiecej niz 2-3 sciezki)</li>
+      <li>Potrzebujesz <strong>petli z wieloma warunkami wyjscia</strong> (np. przetwórz dane, ale zakoncz jesli blad LUB brak danych LUB timeout)</li>
+      <li>Chcesz <strong>zwizualizowac przeplyw</strong> procesu w sposob zblizony do klasycznego diagramu blokowego</li>
+      <li>Proces ma <strong>nielinearny przebieg</strong> — np. po bledzie wraca do wczesniejszego kroku</li>
+    </ul>
+
+    <div class="warn" style="margin-top:12px;"><strong>Kiedy NIE uzywac Flowchart:</strong>
+      <ul class="bullets" style="margin-top:6px;">
+        <li>Dla prostych, liniowych procesow — tu Sequence jest czytelniejszy</li>
+        <li>Gdy nie potrzebujesz petli ani rozgalezien — Flowchart dodaje niepotrzebna zlozonosc wizualna</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Flowchart vs Sequence -->
+<div class="section" id="m2-porownanie">
+  <div class="theory-box">
+    <div class="label">Flowchart vs Sequence — porownanie</div>
+    <table class="gen">
+      <tr><th>Cecha</th><th>Sequence</th><th>Flowchart</th></tr>
+      <tr><td>Przebieg</td><td>Liniowy, z gory na dol</td><td>Swobodny, z polaczeniami</td></tr>
+      <tr><td>Rozgalezienia</td><td>If/Else, Switch</td><td>FlowDecision, FlowSwitch</td></tr>
+      <tr><td>Petle</td><td>For Each, While</td><td>Polaczenia wsteczne (strzalki)</td></tr>
+      <tr><td>Kiedy uzywac</td><td>Proste, sekwencyjne procesy</td><td>Procesy z wieloma sciezkami, petlami, decyzjami</td></tr>
+      <tr><td>Widocznosc</td><td>Kompaktowy</td><td>Przejrzysty dla zlozonej logiki</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- Elementy Flowchart -->
+<div class="section" id="m2-elementy">
+  <div class="theory-box">
+    <div class="label">Elementy Flowchart</div>
+    <ul class="bullets">
+      <li><strong>FlowStep</strong> — pojedynczy krok (zawiera jedna aktywnosc lub Sequence). Moze miec jedno wyjscie (strzalke do nastepnego kroku).</li>
+      <li><strong>FlowDecision</strong> — odpowiednik If/Else. Przyjmuje warunek Boolean i ma <strong>dwie galezi</strong>: True (zielona strzalka) i False (czerwona strzalka).</li>
+      <li><strong>FlowSwitch</strong> — odpowiednik Switch. Pozwala na <strong>wiele galezi</strong> na podstawie wartosci wyrazenia.</li>
+      <li><strong>Strzalki (connections)</strong> — lacza elementy i definiuja przeplyw. Strzalka wsteczna (do wczesniejszego elementu) tworzy petle.</li>
+    </ul>
+
+    <div class="tip" style="margin-top:12px;"><strong>Petla w Flowchart</strong> — realizowana przez polaczenie strzalki z FlowStep z powrotem do wczesniejszego FlowStep lub FlowDecision. Nie wymaga dedykowanej aktywnosci petli — wystarczy narysowac strzalke "wstecz".</div>
+
+    <div class="theory-heading">Zasady projektowania czytelnych Flowchartow</div>
+    <ol class="steps">
+      <li><strong>Przeplyw z gory na dol</strong> — Start na gorze, End na dole</li>
+      <li><strong>Decyzje wyrownane</strong> — True w jedna strone, False w druga (konsekwentnie)</li>
+      <li><strong>Grupuj logike w Sequence</strong> — wewnatrz FlowStep umiesc Sequence z wieloma aktywnosciami</li>
+      <li><strong>Nazywaj FlowDecision</strong> — nadawaj czytelne nazwy (np. "Czy plik istnieje?")</li>
+      <li><strong>Unikaj krzyzujacych sie strzalek</strong> — przesun elementy, aby strzalki nie przecinaly sie</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ==================== EXERCISES MODULE 2 ==================== -->
+<div class="section" id="m2-cw1">
+  <div class="module-heading">Cwiczenia — Modul 2</div>
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Cwiczenie — Weryfikacja NIP na Bialej Liscie<div class="goal">Cel: Na podstawie numerow NIP z pliku CEIDG.xlsx sprawdz na stronie podatki.gov.pl, czy firma figuruje w rejestrze VAT. Zapisz wyniki do nowej kolumny w Excelu.</div></div>
+    </div>
+    <div class="exercise-body">
+      <div class="label">Czego sie nauczysz</div>
+      <div class="edu-list">
+        <div class="edu-item">Flowchart z petla — strzalka powrotna zamiast For Each</div>
+        <div class="edu-item">FlowDecision jako warunek wyjscia z petli</div>
+        <div class="edu-item"><code>dt.Rows(index)("kolumna").ToString</code> — dostep do konkretnej komorki DataTable</div>
+        <div class="edu-item">Indeksowanie od 0 — <code>Rows(int_licznik - 1)</code> bo licznik startuje od 1</div>
+        <div class="edu-item"><code>Use Application/Browser</code> z CloseMode — Never (w trakcie pracy) vs Always (na koncu)</div>
+        <div class="edu-item"><strong>Check App State</strong> — sprawdzenie czy element pojawil sie na stronie</div>
+        <div class="edu-item"><strong>Zapis wyniku do DataTable</strong> — <code>dt.Rows(index)("kolumna") = wartosc</code> modyfikuje tabele w pamieci</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MODULE 3 ==================== -->
+<div class="section" id="m3-czym">
+  <div class="module-heading">Modul 3 — Orchestrator (Assets, Queues, Dispatcher/Performer)</div>
+  <div class="theory-box">
+    <div class="label">Czym jest Orchestrator?</div>
+    <p style="margin-bottom:10px;">Orchestrator to serwer zarzadzajacy robotami UiPath. Pelni trzy glowne role:</p>
+
+    <ol class="steps">
+      <li><strong>Zarzadzanie robotami</strong> — Orchestrator wie, ktore roboty (maszyny) sa dostepne, i moze zlecac im uruchomienie procesow. Robot laczy sie z Orchestratorem przez UiPath Assistant.</li>
+      <li><strong>Centralne przechowywanie danych</strong> — Assety (dane konfiguracyjne, hasla) i Kolejki (dane do przetworzenia) sa przechowywane na serwerze, a nie na maszynie robota. To oznacza, ze mozna zmienic haslo w jednym miejscu i wszystkie roboty od razu uzyja nowego.</li>
+      <li><strong>Monitoring i logowanie</strong> — Orchestrator zbiera logi z wszystkich robotow, pokazuje statusy transakcji, generuje raporty i alerty.</li>
+    </ol>
+
+    <div class="theory-heading">Architektura komunikacji Robot - Orchestrator</div>
+    <pre>[UiPath Studio] → publikuje → [Orchestrator (serwer)]
+                                    ↕ (API REST / HTTPS)
+                               [UiPath Robot (maszyna)]
+                                    ↕
+                               [UiPath Assistant (UI)]</pre>
+
+    <ul class="bullets" style="margin-top:10px;">
+      <li>Robot laczy sie z Orchestratorem przez HTTPS (szyfrowane polaczenie)</li>
+      <li>Cala komunikacja odbywa sie przez REST API</li>
+      <li>W trybie "Attended" (robot z uzytkownikiem) — robot dziala na maszynie uzytkownika</li>
+      <li>W trybie "Unattended" (robot bez uzytkownika) — robot dziala na dedykowanej maszynie wirtualnej</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Assety -->
+<div class="section" id="m3-assety">
+  <div class="theory-box">
+    <div class="label">Assety</div>
+    <table class="gen">
+      <tr><th>Typ Asseta</th><th>Opis</th><th>Uzycie</th></tr>
+      <tr><td><strong>Text</strong></td><td>Przechowuje tekst (np. sciezka do aplikacji)</td><td>Get Asset → String</td></tr>
+      <tr><td><strong>Integer</strong></td><td>Przechowuje liczbe</td><td>Get Asset → Int32</td></tr>
+      <tr><td><strong>Boolean</strong></td><td>Przechowuje True/False</td><td>Get Asset → Boolean</td></tr>
+      <tr><td><strong>Credential</strong></td><td>Przechowuje login + haslo (SecureString)</td><td>Get Credential → Username (String) + Password (SecureString)</td></tr>
+    </table>
+
+    <div class="theory-heading">Aktywnosci</div>
+    <ul class="bullets">
+      <li><strong>Get Asset</strong> — pobiera wartosc asseta tekstowego/liczbowego/boolean</li>
+      <li><strong>Get Credential</strong> — pobiera login i haslo z asseta typu Credential</li>
+      <li>Wlasciwosc <code>FolderPath</code> — folder Orchestratora (np. <code>"user@mail.com's workspace"</code>)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Kolejki (Queues) -->
+<div class="section" id="m3-kolejki">
+  <div class="theory-box">
+    <div class="label">Kolejki (Queues)</div>
+    <p style="margin-bottom:10px;">Kolejka to centralny "schowek" na elementy do przetworzenia. Dziala jak tasma produkcyjna w fabryce — jeden robot (Dispatcher) kladzie elementy na tasme, a drugi (Performer) zdejmuje je i przetwarza.</p>
+
+    <div class="theory-heading">Cykl zycia Queue Item</div>
+    <pre>[New] → Robot pobiera → [In Progress] → Robot konczy → [Successful]
+                                      → Robot zglasza blad → [Failed]
+                                           ├── Business Exception (blad danych)
+                                           └── Application Exception (blad systemowy)</pre>
+
+    <table class="gen" style="margin-top:14px;">
+      <tr><th>Pojecie</th><th>Opis</th></tr>
+      <tr><td><strong>Queue</strong></td><td>Kolejka w Orchestratorze — kontener na elementy do przetworzenia</td></tr>
+      <tr><td><strong>Queue Item</strong></td><td>Pojedynczy element kolejki z danymi (SpecificContent)</td></tr>
+      <tr><td><strong>Reference</strong></td><td>Unikalna sygnatura/identyfikator transakcji</td></tr>
+      <tr><td><strong>Status</strong></td><td>New, In Progress, Successful, Failed</td></tr>
+      <tr><td><strong>Error Type</strong></td><td>Business (blad danych) vs Application (blad systemowy)</td></tr>
+    </table>
+
+    <div class="theory-heading">Kiedy Queue, a kiedy DataTable?</div>
+    <table class="gen">
+      <tr><th>Kryterium</th><th>Queue (Orchestrator)</th><th>DataTable (plik Excel)</th></tr>
+      <tr><td>Wiele robotow</td><td>Tak — kolejka synchronizuje dostep</td><td>Nie — plik blokowany</td></tr>
+      <tr><td>Retry automatyczny</td><td>Tak — konfigurowalny w Orchestratorze</td><td>Nie — musisz sam zaprogramowac</td></tr>
+      <tr><td>Status tracking</td><td>Wbudowany (New/InProgress/Successful/Failed)</td><td>Musisz sam dodac kolumne "Status"</td></tr>
+      <tr><td>Audyt</td><td>Pelny log w Orchestratorze</td><td>Brak</td></tr>
+      <tr><td>Offline</td><td>Nie — wymaga polaczenia z Orchestratorem</td><td>Tak — dziala lokalnie</td></tr>
+      <tr><td>Prostota</td><td>Wymaga konfiguracji Orchestratora</td><td>Prosty Read Range</td></tr>
+    </table>
+
+    <div class="tip" style="margin-top:12px;"><strong>Zasada:</strong> Jesli masz jednego robota i proste dane — DataTable wystarczy. Jesli masz wiele robotow, potrzebujesz retry lub audytu — uzyj Queue.</div>
+  </div>
+</div>
+
+<!-- Aktywnosci kolejek -->
+<div class="section" id="m3-aktywnosci-kolejek">
+  <div class="theory-box">
+    <div class="label">Aktywnosci kolejek</div>
+    <table class="gen">
+      <tr><th>Aktywnosc</th><th>Opis</th></tr>
+      <tr><td><strong>Add Queue Item</strong></td><td>Dodaje jeden element z ItemInformation (klucz-wartosc)</td></tr>
+      <tr><td><strong>Bulk Add Queue Items</strong></td><td>Dodaje wiele elementow hurtowo z DataTable</td></tr>
+      <tr><td><strong>Get Transaction Item</strong></td><td>Pobiera nastepny element ze statusem New</td></tr>
+      <tr><td><strong>Set Transaction Status</strong></td><td>Ustawia status: Successful / Failed + ErrorType + Reason</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- Wzorzec Dispatcher-Performer -->
+<div class="section" id="m3-dispatcher">
+  <div class="theory-box">
+    <div class="label">Wzorzec Dispatcher-Performer</div>
+    <ul class="bullets">
+      <li><strong>Dispatcher</strong> — robot ladujacy dane do kolejki (np. z Excela)</li>
+      <li><strong>Performer</strong> — robot przetwarzajacy elementy z kolejki jeden po jednym</li>
+    </ul>
+
+    <div class="warn" style="margin-top:12px;"><strong>Wazne:</strong> Add Queue Item pozwala nadac unikalne Reference (sygnature). Bulk Add Queue Items jest szybszy, ale nie pozwala nadac indywidualnych referencji.</div>
+  </div>
+</div>
+
+<!-- Try Catch vs Retry Scope -->
+<div class="section" id="m3-trycatch">
+  <div class="theory-box">
+    <div class="label">Try Catch vs Retry Scope — kiedy co uzywac</div>
+    <table class="gen">
+      <tr><th>Cecha</th><th>Try Catch</th><th>Retry Scope</th></tr>
+      <tr><td>Cel</td><td>Przechwycenie bledu i reakcja</td><td>Automatyczne ponawianie do sukcesu</td></tr>
+      <tr><td>Ile razy?</td><td>Raz (catch)</td><td>Konfigurowalnie (RetryNumber)</td></tr>
+      <tr><td>Warunek sukcesu</td><td>Brak wyjatku</td><td>Spelnienie warunku (Condition)</td></tr>
+      <tr><td>Kiedy uzywac</td><td>Obsluga znanych bledow, logowanie, fallback</td><td>Element UI laduje sie wolno, niestabilna siec</td></tr>
+      <tr><td>Przyklad</td><td>Try: Get Transaction Item, Catch: Assign Nothing</td><td>Retry 3x: Click "Login" → Condition: Element "Dashboard" Exists</td></tr>
+    </table>
+
+    <div class="tip" style="margin-top:12px;"><strong>Wskazowka:</strong> Try Catch i Retry Scope mozna laczyc — Retry Scope wewnatrz Try, aby ponawiac operacje, a jesli wszystkie proby zawioda, Try Catch zlapie wyjatek.</div>
+  </div>
+</div>
+
+<!-- Logi Orchestratora -->
+<div class="section" id="m3-logi">
+  <div class="theory-box">
+    <div class="label">Logi Orchestratora</div>
+    <p style="margin-bottom:10px;">Orchestrator automatycznie zbiera wszystkie logi generowane przez <code>Log Message</code> i wyswietla je w panelu <strong>Logs</strong> (Monitoring → Logs). Dlatego:</p>
+    <ul class="bullets">
+      <li>W produkcji uzywamy <strong>Log Message</strong> zamiast <strong>Message Box</strong> — Message Box blokuje robota i nie trafia do Orchestratora</li>
+      <li>Poziomy logow (Trace/Info/Warn/Error) pomagaja filtrowac problemy w panelu Orchestratora</li>
+      <li>Kazdy log zawiera: timestamp, poziom, nazwe robota, nazwe procesu, tresc wiadomosci</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== EXERCISES MODULE 3 ==================== -->
+<div class="section" id="m3-zad1">
+  <div class="module-heading">Cwiczenia — Modul 3</div>
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Zadanie 1 — Logowanie z Orchestratora<div class="goal">Cel: Pobierz dane logowania i sciezke do aplikacji z Orchestratora, uruchom Robotivity i zaloguj sie.</div></div>
+    </div>
+    <div class="exercise-body">
+      <div class="label">Czego sie nauczysz</div>
+      <div class="edu-list">
+        <div class="edu-item"><code>Get Credential</code> — pobieranie loginu i hasla z asseta Credential</div>
+        <div class="edu-item"><code>Get Asset</code> — pobieranie sciezki do aplikacji z asseta Text</div>
+        <div class="edu-item"><code>SecureString</code> — haslo nigdy nie jest widoczne w logach, uzywamy SecureText w Type Into</div>
+        <div class="edu-item"><code>Check App State</code> — weryfikacja czy logowanie sie powiodlo</div>
+        <div class="edu-item"><code>Kill Process</code> na poczatku — dobre praktyki: wyczysc srodowisko przed startem</div>
+      </div>
+      <div class="warn"><strong>Uwaga:</strong> W <code>Type Into</code> dla hasla uzywamy wlasciwosci <code>SecureText</code> (nie <code>Text</code>!) — dzieki temu haslo nigdy nie zostanie wyswietlone w logach.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="m3-zad2">
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Zadanie 2 — Dispatcher<div class="goal">Cel: Zaladuj dane z Transactions.xlsx do kolejki w Orchestratorze.</div></div>
+    </div>
+    <div class="exercise-body">
+      <div class="label">Czego sie nauczysz</div>
+      <div class="edu-list">
+        <div class="edu-item"><code>Bulk Add Queue Items</code> — szybkie ladowanie danych z DataTable do kolejki</div>
+        <div class="edu-item"><code>Add Queue Item</code> — ladowanie z unikalnymi referencjami (wolniejsze, ale z kontrola)</div>
+        <div class="edu-item">Trade-off: szybkosc (Bulk) vs kontrola (Add z referencjami)</div>
+        <div class="edu-item"><code>CurrentRow.Item(0).ToString</code> — dostep do kolumny po indeksie; bezpieczniej: <code>CurrentRow("CashIn").ToString</code> (po nazwie)</div>
+      </div>
+      <div class="warn"><strong>Wazne:</strong> Jesli dodajemy indywidualny numer referencji, scope zmiennej licznika musi byc na wyzszym poziomie niz petla For Each Row — w przeciwnym razie wartosc resettuje sie w kazdej iteracji.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="m3-zad3">
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Zadanie 3 — Performer<div class="goal">Cel: Stworz robota (Flowchart), ktory pobiera transakcje z kolejki, loguje sie do Robotivity i wpisuje dane. Obsluga bledow: zle haslo → blad systemowy, dane nienumeryczne → Failed (Business).</div></div>
+    </div>
+    <div class="exercise-body">
+      <div class="label">Czego sie nauczysz</div>
+      <div class="edu-list">
+        <div class="edu-item">Flowchart z petla — strzalka powrotna do "Pobranie transakcji" po procesowaniu</div>
+        <div class="edu-item"><code>Get Transaction Item</code> — automatycznie pobiera element ze statusem New i zmienia na InProgress</div>
+        <div class="edu-item">Try Catch wokol <code>Get Transaction Item</code> — gdy kolejka pusta, rzuca wyjatek</div>
+        <div class="edu-item"><code>TransactionItem IsNot Nothing</code> — warunek wyjscia z petli</div>
+        <div class="edu-item"><code>.SpecificContent.GetValueOrDefault("klucz")</code> — bezpieczny dostep do danych transakcji (zwraca <code>Object</code> — potrzebny <code>.ToString</code>!)</div>
+        <div class="edu-item"><code>.IsNumeric</code> — metoda VB.NET sprawdzajaca czy tekst jest liczba</div>
+        <div class="edu-item"><code>Set Transaction Status</code> — Successful vs Failed (Business) — roznica w raportowaniu</div>
+      </div>
+      <div class="warn"><strong>Uwaga:</strong> W przypadku zlego hasla robot ma zakonczyc prace z komunikatem bledu systemowego. W przypadku danych nienumerycznych — zmienia status transakcji na Failed z ErrorType: Business.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MODULE 4 ==================== -->
+<div class="section" id="m4-czym">
+  <div class="module-heading">Modul 4 — State Machine: wprowadzenie</div>
+  <div class="theory-box">
+    <div class="label">Czym jest State Machine?</div>
+    <p style="margin-bottom:10px;">Automat stanowy (State Machine) to wzorzec projektowy, w ktorym proces przechodzi miedzy zdefiniowanymi stanami (States) na podstawie warunkow (Transitions). To jak mapa stanow — w kazdym momencie proces "jest" w dokladnie jednym stanie i na podstawie warunkow przechodzi do innego.</p>
+
+    <div class="theory-heading">Przyklad ze swiata biznesu — proces zamowienia</div>
+    <pre>[Nowe] → Platnosc otrzymana → [Oplacone] → Wyslane → [W dostawie] → Dostarczone → [Zakonczone]
+   ↓                              ↓                        ↓
+ Anulowane                    Zwrot                   Niedostarczone
+   ↓                              ↓                        ↓
+[Anulowane]                  [Zwrocone]              [Do ponownej wysylki]</pre>
+
+    <p style="margin-top:10px;">Kazdy prostokat to <strong>stan</strong> (State), a strzalki to <strong>przejscia</strong> (Transitions) z warunkami.</p>
+  </div>
+</div>
+
+<!-- Elementy State Machine -->
+<div class="section" id="m4-elementy">
+  <div class="theory-box">
+    <div class="label">Elementy State Machine</div>
+    <table class="gen">
+      <tr><th>Element</th><th>Opis</th></tr>
+      <tr><td><strong>State</strong></td><td>Stan — zawiera Entry (akcje przy wejsciu), Exit (akcje przy wyjsciu) i Transitions</td></tr>
+      <tr><td><strong>Transition</strong></td><td>Przejscie miedzy stanami — zawiera Condition (warunek) i wskazanie docelowego State</td></tr>
+      <tr><td><strong>Initial State</strong></td><td>Stan poczatkowy (jeden, oznaczony strzalka startowa)</td></tr>
+      <tr><td><strong>Final State</strong></td><td>Stan koncowy — brak Transitions (proces sie konczy)</td></tr>
+    </table>
+
+    <div class="theory-heading">Budowa pojedynczego State</div>
+    <ul class="bullets">
+      <li><strong>Entry</strong> — akcje wykonywane przy wejsciu do stanu (np. pobranie danych, wyswietlenie formularza)</li>
+      <li><strong>Exit</strong> — akcje wykonywane przy wyjsciu ze stanu (np. zapis logow, czyszczenie zmiennych)</li>
+      <li><strong>Transitions</strong> — lista warunkow przejscia do innych stanow. Sprawdzane w kolejnosci zdefiniowania — <strong>pierwsza spelniona wygrywa</strong>.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Kiedy State Machine? -->
+<div class="section" id="m4-kiedy">
+  <div class="theory-box">
+    <div class="label">Kiedy State Machine zamiast Flowchart?</div>
+    <table class="gen">
+      <tr><th>Kryterium</th><th>Flowchart</th><th>State Machine</th></tr>
+      <tr><td>Prostota</td><td>Prostsze procesy</td><td>Zlozone z wieloma stanami</td></tr>
+      <tr><td>Powtarzanie</td><td>Petle przez strzalki</td><td>Naturalne przejscia</td></tr>
+      <tr><td>Czytelnosc</td><td>Moze byc chaotyczny przy wielu galeziach</td><td>Przejrzysty dla procesow biznesowych</td></tr>
+      <tr><td>Orchestrator</td><td>Wystarczajacy dla prostych</td><td>Wzorzec REFramework</td></tr>
+      <tr><td>Obsluga bledow</td><td>Wymaga recznego Try Catch</td><td>Naturalnie wbudowana w Transitions</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== EXERCISES MODULE 4 ==================== -->
+<div class="section" id="m4-cw1">
+  <div class="module-heading">Cwiczenia — Modul 4</div>
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Cwiczenie — Input Dialog z rozgalezieniem<div class="goal">Cel: Uzytkownik wpisuje imie. Jesli "Adam" → przypisz nazwisko "Nowak". Jesli "Kamil" → "Kowalski". Inne → ponow pytanie.</div></div>
+    </div>
+    <div class="exercise-body">
+      <div class="label">Czego sie nauczysz</div>
+      <div class="edu-list">
+        <div class="edu-item">Petla w State Machine — Transition prowadzaca z powrotem do tego samego stanu</div>
+        <div class="edu-item">Transition bez warunku — automatyczne przejscie (np. do Final State)</div>
+        <div class="edu-item">Kolejnosc Transitions — wazna! Pierwsza spelniona wygrywa</div>
+        <div class="edu-item">Scope zmiennych — musza byc na poziomie StateMachine (nie wewnatrz State)</div>
+        <div class="edu-item">Final State — nie ma Transitions, konczy State Machine</div>
+      </div>
+      <div class="tip"><strong>Wskazowka:</strong> To cwiczenie to wstep przed REFramework w Dniu 4. Zauważ analogie: Init → Get Transaction → Process → End.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== DEBUGGING ==================== -->
+<div class="section" id="debug">
+  <div class="module-heading">Przydatne</div>
+  <div class="theory-box">
+    <div class="label">Debugowanie — przydatne techniki</div>
+
+    <div class="theory-heading">Flowchart i State Machine</div>
+    <ul class="bullets">
+      <li><strong>Breakpoint w Flowchart:</strong> Kliknij prawym na FlowStep → Toggle Breakpoint. Robot zatrzyma sie przed wykonaniem tego kroku.</li>
+      <li><strong>Sledzenie Transitions w State Machine:</strong> W trybie Debug (F5) UiPath podswietla aktualny State i Transition.</li>
+      <li><strong>Locals Panel:</strong> W trybie Debug panel Locals pokazuje wartosci wszystkich zmiennych — przydatne do sprawdzenia <code>TransactionItem</code>, <code>SystemException</code> itp.</li>
+      <li><strong>Slow Step:</strong> Wlacz Slow Step w toolbar — spowalnia wykonanie, widoczne kazde przejscie miedzy stanami.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== COMMON PROBLEMS ==================== -->
+<div class="section" id="problemy">
+  <div class="theory-box">
+    <div class="label">Typowe problemy i rozwiazania</div>
+    <table class="gen">
+      <tr><th>Problem</th><th>Przyczyna</th><th>Rozwiazanie</th></tr>
+      <tr><td>"Variable not found"</td><td>Scope zmiennej za maly</td><td>Przesun deklaracje zmiennej wyzej</td></tr>
+      <tr><td>Queue Item pusty</td><td>Brak danych w kolejce</td><td>Najpierw uruchom Dispatcher</td></tr>
+      <tr><td>"Queue not found"</td><td>Zla nazwa kolejki lub folderu</td><td>Sprawdz QueueName i FolderPath w Orchestratorze</td></tr>
+      <tr><td>Haslo widoczne w logach</td><td>Uzycie Text zamiast SecureText</td><td>W Type Into uzyj SecureText dla hasla</td></tr>
+      <tr><td>Plik zablokowany (Excel)</td><td>Excel otwarty w tle</td><td>Kill Process <code>excel</code> przed Read Range</td></tr>
+      <tr><td>Path Exists zwraca False</td><td>Zla sciezka lub PathType</td><td>Sprawdz: File vs Folder w PathType</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="material-footer">
+  <img src="logo.png" alt="Robotivity" style="height:36px; vertical-align:middle; margin-bottom:6px;"><br>
+  Szkolenie przygotowane przez <strong>Robotivity&reg;</strong> — Autoryzowany Partner UiPath<br>
+  info@robotivity.pl &nbsp;&middot;&nbsp; www.Robotivity.pl &nbsp;&middot;&nbsp; tel.: +48 690 020 576
+</div>
+
+</main>
+
+<script>
+  const sections = document.querySelectorAll('.section[id]');
+  const navItems = document.querySelectorAll('.nav-item');
+  function onScroll() { let current = ''; sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) current = s.id; }); navItems.forEach(a => { a.classList.toggle('active', a.getAttribute('href') === '#' + current); }); }
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  navItems.forEach(a => { a.addEventListener('click', e => { const target = document.querySelector(a.getAttribute('href')); if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }); });
+  function filterNav(query) { const q = query.toLowerCase(); navItems.forEach(a => { const match = a.textContent.toLowerCase().includes(q); a.style.display = (q === '' || match) ? '' : 'none'; }); document.querySelectorAll('.nav-module, .nav-day').forEach(el => { el.style.display = (q === '') ? '' : 'none'; }); }
+</script>
+
+</body>
+</html>
