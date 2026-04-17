@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zadania praktyczne — Szkolenie UiPath — Dzień 1</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #222;
+      background: #e8f1fb;
+      padding: 20px;
+    }
+
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 40px 50px;
+      box-shadow: 0 2px 12px rgba(30,77,140,0.13);
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      border-bottom: 3px solid #5b9bd5;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+
+    .header img {
+      height: 70px;
+      width: auto;
+      flex-shrink: 0;
+    }
+
+    .header-text {
+      flex: 1;
+    }
+
+    .header-text h1 {
+      font-size: 22px;
+      color: #1e4d8c;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      margin-bottom: 3px;
+    }
+
+    .header-text .subtitle {
+      font-size: 13px;
+      color: #5b9bd5;
+      font-weight: 600;
+    }
+
+    .header-text .subtitle-small {
+      font-size: 12px;
+      color: #999;
+      margin-top: 2px;
+    }
+
+    /* Day headers */
+    .day-header {
+      background: #1e4d8c;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 10px 18px;
+      margin: 30px 0 20px 0;
+      border-radius: 4px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* Module headers */
+    .module-header {
+      background: #eaf3fb;
+      color: #1e4d8c;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 16px;
+      margin: 24px 0 14px 0;
+      border-left: 4px solid #5b9bd5;
+      border-radius: 0 3px 3px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Task card */
+    .task-card {
+      border: 1px solid #cde0f5;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .task-card.intro {
+      border-color: #b3d1f0;
+    }
+
+    .task-title {
+      background: #5b9bd5;
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 9px 16px;
+    }
+
+    .task-card.intro .task-title {
+      background: #3a7abf;
+    }
+
+    .task-topic {
+      background: #f0f7ff;
+      font-size: 12px;
+      color: #2a6096;
+      padding: 5px 16px;
+      border-bottom: 1px solid #cde0f5;
+      font-style: italic;
+    }
+
+    .task-card.intro .task-topic {
+      background: #e4f0fb;
+      color: #1e4d8c;
+      border-bottom-color: #b3d1f0;
+    }
+
+    .task-body {
+      padding: 14px 16px;
+    }
+
+    .task-body h4 {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #1e4d8c;
+      margin: 12px 0 6px 0;
+      letter-spacing: 0.6px;
+    }
+
+    .task-body h4:first-child {
+      margin-top: 0;
+    }
+
+    .task-body ol, .task-body ul {
+      padding-left: 20px;
+    }
+
+    .task-body ol li, .task-body ul li {
+      margin-bottom: 4px;
+    }
+
+    code {
+      background: #eaf3fb;
+      color: #1e4d8c;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 12px;
+      border: 1px solid #cde0f5;
+    }
+
+    pre {
+      background: #f4f9ff;
+      border: 1px solid #cde0f5;
+      border-radius: 4px;
+      padding: 10px 14px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 12px;
+      margin: 8px 0;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      color: #1e4d8c;
+    }
+
+    .hint-box {
+      background: #e8f4fd;
+      border-left: 3px solid #5b9bd5;
+      padding: 8px 12px;
+      margin: 8px 0;
+      font-size: 13px;
+      border-radius: 0 3px 3px 0;
+      color: #1e4d8c;
+    }
+
+    .bonus-tag {
+      display: inline-block;
+      background: #3a7abf;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: 3px;
+      margin-right: 4px;
+      vertical-align: middle;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 13px;
+      margin: 8px 0;
+    }
+
+    table th {
+      background: #eaf3fb;
+      font-weight: 700;
+      padding: 6px 10px;
+      border: 1px solid #cde0f5;
+      text-align: left;
+      color: #1e4d8c;
+    }
+
+    table td {
+      padding: 5px 10px;
+      border: 1px solid #cde0f5;
+    }
+
+    strong {
+      color: #1e4d8c;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #999;
+      border-top: 2px solid #eaf3fb;
+      margin-top: 36px;
+      padding-top: 16px;
+    }
+
+    .footer strong {
+      color: #1e4d8c;
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+        font-size: 12px;
+      }
+
+      .page {
+        box-shadow: none;
+        padding: 20px 30px;
+        max-width: 100%;
+      }
+
+      .task-card {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      .day-header {
+        page-break-before: always;
+      }
+
+      .day-header:first-of-type {
+        page-break-before: avoid;
+      }
+
+      code {
+        border: none;
+        background: #f0f0f0;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <img src="../logo.png" alt="Robotivity logo">
+    <div class="header-text">
+      <h1>Zadania praktyczne — Szkolenie UiPath — Dzień 1</h1>
+      <div class="subtitle">Autoryzowany Partner UiPath</div>
+      <div class="subtitle-small">info@robotivity.pl &nbsp;·&nbsp; www.Robotivity.pl &nbsp;·&nbsp; tel.: +48 690 020 576</div>
+    </div>
+  </div>
+
+  <!-- ==================== DZIEŃ 1 ==================== -->
+  <div class="day-header">Dzień 1</div>
+
+  <div class="module-header">Moduł 1 — Podstawy automatyzacji</div>
+
+  <!-- Zadanie 1 -->
+  <div class="task-card">
+    <div class="task-title">Zadanie 1 — Imię jednorożca</div>
+    <div class="task-topic">Folder: Dzien1_Zadanie1/ · Temat: Automatyzacja przeglądarki + pobieranie danych od użytkownika</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Pobierz od użytkownika <strong>imię</strong> oraz <strong>miesiąc urodzenia</strong> (lista: January; February; March; April; May; June; July; August; September; October; November; December)</li>
+        <li>Wejdź na stronę: <code>https://www.rpasamples.com/findunicornname</code></li>
+        <li>Wpisz pobrane imię i wybierz pobrany miesiąc</li>
+        <li>Wyświetl wygenerowane imię jednorożca w Message Box</li>
+      </ol>
+      <h4>Wskazówki</h4>
+      <ul>
+        <li>Do pobierania danych od użytkownika z listą wyboru użyj aktywności <code>Input Dialog</code> z opcją <code>OptionsString</code></li>
+        <li>Do otwierania przeglądarki użyj <code>Use Application/Browser</code></li>
+        <li>Do wyboru miesiąca z listy rozwijanej użyj <code>Select Item</code></li>
+        <li>Do pobrania wygenerowanego wyniku ze strony użyj <code>Get Text</code></li>
+      </ul>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>str_imie</td><td>String</td><td>Imię użytkownika</td></tr>
+        <tr><td>str_miesiac</td><td>String</td><td>Wybrany miesiąc</td></tr>
+        <tr><td>str_imie_jednorozca</td><td>String</td><td>Wynik ze strony</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Zadanie 2 -->
+  <div class="task-card">
+    <div class="task-title">Zadanie 2 — Kalkulator (dynamiczne selektory)</div>
+    <div class="task-topic">Folder: Dzien1_Zadanie2_Kalkulator/ · Temat: Automatyzacja aplikacji desktopowej + dynamiczne selektory</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Pobierz od użytkownika <strong>dwie liczby</strong> z przedziału 1–9</li>
+        <li>Wykonaj <strong>dodawanie</strong> tych liczb w aplikacji Kalkulator (Windows)</li>
+        <li>Pobierz wynik wyświetlony w kalkulatorze</li>
+        <li>Wyświetl wynik w Message Box</li>
+      </ol>
+      <h4>Wskazówki</h4>
+      <ul>
+        <li>Użyj <code>Input Dialog</code> dwukrotnie (dla każdej liczby)</li>
+        <li>Otwórz Kalkulator przez <code>Use Application/Browser</code></li>
+        <li>Klikanie cyfr wykonaj przez aktywność <code>Click</code> — spróbuj użyć <strong>dynamicznego selektora</strong> (zamiast tworzyć osobny Click dla każdej cyfry, sparametryzuj selektor zmienną)</li>
+        <li>Do pobrania wyniku użyj <code>Get Text</code></li>
+      </ul>
+      <div class="hint-box">
+        <strong>Klucz do zadania:</strong> Dynamiczny selektor to selektor zawierający zmienną, np.:<br>
+        <code>[string.Format("&lt;uia automationid='num{0}Button'/&gt;", str_liczba1)]</code>
+      </div>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>str_liczba1</td><td>String</td><td>Pierwsza liczba (domyślnie "3")</td></tr>
+        <tr><td>str_liczba2</td><td>String</td><td>Druga liczba (domyślnie "6")</td></tr>
+        <tr><td>str_wynik</td><td>String</td><td>Wynik z kalkulatora</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Zadanie 3 -->
+  <div class="task-card">
+    <div class="task-title">Zadanie 3 — Dni tygodnia</div>
+    <div class="task-topic">Folder: Dzien1_Zadanie3_DniTygodnia/ · Temat: Praca z plikiem tekstowym + tablica + pętla + warunek</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Przeczytaj tekst z pliku <code>Tydzien.txt</code></li>
+        <li>Podziel pobrany tekst na poszczególne dni tygodnia</li>
+        <li>Wypisz każdy dzień (używając <code>Log Message</code>) w pętli</li>
+        <li>Jeżeli dniem tygodnia będzie <strong>"Piatek"</strong> — wyświetl <code>Log Message: "Juz jutro weekend"</code> i przerwij pętlę (<code>Break</code>)</li>
+        <li>Jeśli dzień <strong>nie jest</strong> "Piatek" — wyświetl <code>Log Message: "Dopiero [dzien] Index: [index]"</code></li>
+      </ol>
+      <h4>Wskazówki</h4>
+      <ul>
+        <li>Użyj <code>Read Text File</code> do odczytu pliku</li>
+        <li>Do podziału tekstu użyj metody <code>.Split(";")</code> na zmiennej typu String — wynik to tablica <code>String[]</code></li>
+        <li>Do iteracji po tablicy użyj <code>For Each</code> (typ elementu: <code>String</code>)</li>
+        <li>Warunek sprawdzaj przez aktywność <code>If</code></li>
+        <li>W gałęzi Then (Piatek): <code>Log Message</code> + aktywność <code>Break</code> — przerywa pętlę po znalezieniu piątku</li>
+        <li>W gałęzi Else: <code>Log Message</code> z informacją o bieżącym dniu i indeksie</li>
+      </ul>
+      <h4>Zawartość pliku Tydzien.txt</h4>
+      <pre>Poniedzialek;Wtorek;Sroda;Czwartek;Piatek;Sobota;Niedziela</pre>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>str_tekst_z_pliku</td><td>String</td><td>Cała zawartość pliku</td></tr>
+        <tr><td>arr_tekst_podzielony</td><td>String[]</td><td>Tablica dni tygodnia</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Zadanie 4 -->
+  <div class="task-card">
+    <div class="task-title">Zadanie 4 — Kalkulator w Flowchart</div>
+    <div class="task-topic">Folder: Dzien1_Zadanie4_Flowchart_Kalkulator/ · Temat: Flowchart + FlowSwitch + FlowDecision</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Korzystając z <strong>Flowcharta</strong>, stwórz prosty kalkulator</li>
+        <li>Pobierz od użytkownika <strong>2 liczby całkowite</strong> i wybrane <strong>działanie matematyczne</strong> (dodawanie; odejmowanie; mnozenie; dzielenie)</li>
+        <li>Wykonaj obliczenia i wyświetl wynik w Message Box (sformatowany: <code>dbl_wynik.ToString("F2")</code>)</li>
+        <li><code>FlowDecision</code>: Jeśli wynik jest <strong>większy od 10</strong> → Message Box: <code>"Wynik wiekszy od 10"</code></li>
+        <li>Jeśli wynik jest <strong>mniejszy lub równy 10</strong> → Message Box: <code>"Wynik mniejszy od 10"</code></li>
+      </ol>
+      <h4>Wskazówki</h4>
+      <ul>
+        <li>Utwórz nowy projekt jako <strong>Flowchart</strong> (nie Sequence)</li>
+        <li>Użyj <code>FlowSwitch</code> do rozgałęzienia na 4 działania matematyczne</li>
+        <li>Użyj <code>FlowDecision</code> do sprawdzenia warunku <code>dbl_wynik &gt; 10</code> — oba gałęzie (True i False) mają Message Box</li>
+        <li>Przy dzieleniu użyj zmiennej typu <code>Double</code> i konwersji <code>cdbl()</code>, aby wynik mógł być niecałkowity</li>
+        <li>Wynik formatuj z 2 miejscami po przecinku: <code>dbl_wynik.ToString("F2")</code></li>
+      </ul>
+      <div class="hint-box">
+        <strong>Uwaga:</strong> Przy dzieleniu używaj <code>cdbl()</code> — bez konwersji: <code>7 / 2 = 3</code> (Integer obcina!). Z konwersją: <code>cdbl(7) / cdbl(2) = 3.5</code>.
+      </div>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>int_liczba1</td><td>Integer</td><td>Pierwsza liczba</td></tr>
+        <tr><td>int_liczba2</td><td>Integer</td><td>Druga liczba</td></tr>
+        <tr><td>str_dzialanie_mat</td><td>String</td><td>Wybrane działanie</td></tr>
+        <tr><td>dbl_wynik</td><td>Double</td><td>Wynik obliczeń</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Zadanie dodatkowe - Rozszerzony kalkulator -->
+  <div class="task-card">
+    <div class="task-title"><span class="bonus-tag">Bonus</span> Zadanie dodatkowe — Rozszerzony kalkulator</div>
+    <div class="task-topic">Temat: Rozszerzenie Zadania 4 o obsługę dzielenia przez zero i operację modulo</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>W przypadku dzielenia: dodaj <code>FlowDecision</code> — czy druga liczba = 0?
+          <ul>
+            <li>True → Message Box: <code>"Nie mozna dzielic przez zero!"</code></li>
+            <li>False → wykonaj dzielenie</li>
+          </ul>
+        </li>
+        <li>Dodaj case <code>"modulo"</code> w FlowSwitch: <code>dbl_wynik = int_liczba1 Mod int_liczba2</code></li>
+        <li>Zaktualizuj OptionsString: <code>"dodawanie;odejmowanie;mnozenie;dzielenie;modulo"</code></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="module-header">Moduł 2 — Excel i DataTable</div>
+
+  <!-- Ćwiczenie 5 - DataTable -->
+  <div class="task-card intro">
+    <div class="task-title">Ćwiczenie 5 — DataTable: Wprowadzenie</div>
+    <div class="task-topic">Folder: Dzien1_Zadanie5_DataTable_Wprowadzenie/ · Temat: Podstawowe operacje na DataTable (wspólnie z prowadzącym)</div>
+    <div class="task-body">
+      <h4>Opis ćwiczenia</h4>
+      <ol>
+        <li>Utwórz DataTable z kolumnami: <code>Imie</code>, <code>Nazwisko</code>, <code>Wiek</code> i dodaj kilka wierszy</li>
+        <li>Dodaj nową kolumnę do istniejącej tabeli</li>
+        <li>Iteruj po wierszach pętlą <code>For Each Row</code> i loguj dane</li>
+        <li>Usuń dodaną kolumnę</li>
+        <li>Posortuj tabelę według kolumny <code>Nazwisko</code></li>
+        <li>Przefiltruj — zostaw tylko wiersze gdzie <code>Wiek &gt; 20</code></li>
+        <li>Zapisz wynikową tabelę do pliku Excel</li>
+      </ol>
+      <h4>Kluczowe aktywności</h4>
+      <p><code>Build Data Table</code> &nbsp;·&nbsp; <code>Add Data Column</code> &nbsp;·&nbsp; <code>Add Data Row</code> &nbsp;·&nbsp; <code>For Each Row</code> &nbsp;·&nbsp; <code>Remove Data Column</code> &nbsp;·&nbsp; <code>Sort Data Table</code> &nbsp;·&nbsp; <code>Filter Data Table</code> &nbsp;·&nbsp; <code>Write Range</code></p>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>dt_tabela</td><td>DataTable</td><td>Główna tabela</td></tr>
+        <tr><td>dt_tabela2</td><td>DataTable</td><td>Posortowana tabela</td></tr>
+        <tr><td>str_tabela</td><td>String</td><td>Tekstowa reprezentacja tabeli</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Ćwiczenie 6 - Excel -->
+  <div class="task-card intro">
+    <div class="task-title">Ćwiczenie 6 — Excel: Wprowadzenie</div>
+    <div class="task-topic">Folder: Dzien1_Zadanie6_ExcelWprowadzenie/ · Temat: Read Range + dynamiczna nazwa pliku (wspólnie z prowadzącym)</div>
+    <div class="task-body">
+      <h4>Opis ćwiczenia</h4>
+      <ol>
+        <li>Wczytaj plik Excel (<code>Read Range Workbook</code>) do zmiennej DataTable</li>
+        <li>Pobierz aktualną datę i sformatuj ją do postaci <code>dd-MM-yyyy</code></li>
+        <li>Zapisz wczytaną tabelę do nowego pliku o nazwie <code>"NowyPlik-[data].xlsx"</code></li>
+      </ol>
+      <div class="hint-box">
+        <strong>Wskazówka:</strong> Do formatowania daty użyj wyrażenia <code>Now.ToString("dd-MM-yyyy")</code>
+      </div>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>dt_tabela</td><td>DataTable</td><td>Wczytana tabela</td></tr>
+        <tr><td>dat_date</td><td>DateTime</td><td>Bieżąca data</td></tr>
+        <tr><td>str_data</td><td>String</td><td>Data sformatowana</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Zadanie 7 - Raport przychodów -->
+  <div class="task-card">
+    <div class="task-title">Zadanie 7 — Raport przychodów</div>
+    <div class="task-topic">Folder: Dzien1_Zadanie7_RaportPrzychodow/ · Temat: Filtrowanie + obliczenia + zapis raportu</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Przefiltruj plik <code>Produkty.xlsx</code> — zostaw tylko rekordy, gdzie <strong>ilość jest większa niż 5</strong></li>
+        <li>Usuń kolumnę <code>"Koszt produkcji/szt"</code></li>
+        <li>Dodaj kolumnę <code>"Przychody ze sprzedazy"</code> i oblicz przychód (<code>Ilość * Cena</code>) dla każdego produktu</li>
+        <li>Raport zapisz do pliku <code>Produkty_przychody.xlsx</code></li>
+      </ol>
+      <h4>Wskazówki</h4>
+      <ul>
+        <li>Użyj <code>Read Range</code> do wczytania pliku</li>
+        <li><code>Filter Data Table</code> do filtrowania i usuwania kolumny</li>
+        <li><code>Add Data Column</code> do dodania nowej kolumny</li>
+        <li><code>For Each Row</code> + <code>Assign</code> do obliczenia przychodów</li>
+        <li><code>Write Range</code> do zapisu wynikowego pliku</li>
+      </ul>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>dt_produkty</td><td>DataTable</td><td>Tabela produktów</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Zadanie 8 - NBP Kursy walut -->
+  <div class="task-card">
+    <div class="task-title">Zadanie 8 — Kursy walut NBP</div>
+    <div class="task-topic">Folder: Dzien1_Zadanie8_NBP_KursyWalut/ · Temat: Data Scraping + filtrowanie + dynamiczny zapis</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Otwórz stronę NBP z tabelą kursów walut (tabela A)</li>
+        <li>Pobierz nagłówek strony zawierający datę kursów</li>
+        <li>Pobierz tabelę walut ze strony (<code>Extract Table Data</code>) — kolumny: <code>Nazwa waluty</code>, <code>Kod waluty</code>, <code>Kurs średni</code></li>
+        <li>Zapisz tabelę do pliku <code>"Kurs-tabela-A-[data].xlsx"</code></li>
+        <li>Przefiltruj tabelę — zostaw tylko wiersz z walutą <strong>"euro"</strong></li>
+        <li>Wyświetl kurs euro w Log Message</li>
+      </ol>
+      <h4>Wskazówki</h4>
+      <ul>
+        <li>Użyj <code>Use Application/Browser</code> do otwarcia strony</li>
+        <li><code>Get Text</code> do pobrania daty ze strony</li>
+        <li><code>Extract Table Data</code> do pobrania tabeli kursów</li>
+        <li><code>Filter Data Table</code> do wyfiltrowania euro</li>
+      </ul>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>str_data</td><td>String</td><td>Data kursów ze strony</td></tr>
+        <tr><td>ExtractDataTable</td><td>DataTable</td><td>Cała tabela walut</td></tr>
+        <tr><td>dt_euro</td><td>DataTable</td><td>Przefiltrowana tabela (tylko euro)</td></tr>
+        <tr><td>str_euro</td><td>String</td><td>Wartość kursu euro</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Zadanie dodatkowe - Analiza danych -->
+  <div class="task-card">
+    <div class="task-title"><span class="bonus-tag">Bonus</span> Zadanie dodatkowe — Analiza danych z Excela</div>
+    <div class="task-topic">Temat: Obliczenia statystyczne na danych z pliku Excel</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Wczytaj <code>Produkty.xlsx</code> do DataTable</li>
+        <li>W pętli <code>For Each Row</code> oblicz: sumę, minimum i maksimum kolumny <code>Ilosc</code></li>
+        <li>Oblicz średnią: <code>suma / liczba wierszy</code></li>
+        <li>Stwórz nową tabelę z kolumnami <code>Statystyka</code> i <code>Wartosc</code></li>
+        <li>Dodaj wiersze: Suma, Srednia, Min, Max</li>
+        <li>Zapisz do <code>Produkty_statystyki.xlsx</code></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="footer">
+    <strong>Robotivity®</strong> — Autoryzowany Partner UiPath<br>
+    info@robotivity.pl · www.Robotivity.pl
+  </div>
+
+</div>
+</body>
+</html>
