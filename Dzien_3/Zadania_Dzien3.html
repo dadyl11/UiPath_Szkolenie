@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zadania praktyczne — Szkolenie UiPath — Dzień 3</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px; line-height: 1.6; color: #222; background: #e8f1fb; padding: 20px; }
+    .page { max-width: 900px; margin: 0 auto; background: #fff; padding: 40px 50px; box-shadow: 0 2px 12px rgba(30,77,140,0.13); }
+    .header { display: flex; align-items: center; gap: 28px; border-bottom: 3px solid #5b9bd5; padding-bottom: 20px; margin-bottom: 30px; }
+    .header img { height: 70px; width: auto; flex-shrink: 0; }
+    .header-text { flex: 1; }
+    .header-text h1 { font-size: 22px; color: #1e4d8c; font-weight: 700; letter-spacing: 0.2px; margin-bottom: 3px; }
+    .header-text .subtitle { font-size: 13px; color: #5b9bd5; font-weight: 600; }
+    .header-text .subtitle-small { font-size: 12px; color: #999; margin-top: 2px; }
+    .day-header { background: #1e4d8c; color: #fff; font-size: 15px; font-weight: 700; padding: 10px 18px; margin: 30px 0 20px 0; border-radius: 4px; letter-spacing: 1.5px; text-transform: uppercase; }
+    .module-header { background: #eaf3fb; color: #1e4d8c; font-size: 13px; font-weight: 700; padding: 8px 16px; margin: 24px 0 14px 0; border-left: 4px solid #5b9bd5; border-radius: 0 3px 3px 0; text-transform: uppercase; letter-spacing: 0.5px; }
+    .task-card { border: 1px solid #cde0f5; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
+    .task-card.intro { border-color: #b3d1f0; }
+    .task-title { background: #5b9bd5; color: #fff; font-weight: 700; font-size: 14px; padding: 9px 16px; }
+    .task-card.intro .task-title { background: #3a7abf; }
+    .task-topic { background: #f0f7ff; font-size: 12px; color: #2a6096; padding: 5px 16px; border-bottom: 1px solid #cde0f5; font-style: italic; }
+    .task-body { padding: 14px 16px; }
+    .task-body h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #1e4d8c; margin: 12px 0 6px 0; letter-spacing: 0.6px; }
+    .task-body h4:first-child { margin-top: 0; }
+    .task-body ol, .task-body ul { padding-left: 20px; }
+    .task-body ol li, .task-body ul li { margin-bottom: 4px; }
+    code { background: #eaf3fb; color: #1e4d8c; padding: 1px 5px; border-radius: 3px; font-family: 'Consolas', 'Courier New', monospace; font-size: 12px; border: 1px solid #cde0f5; }
+    pre { background: #f4f9ff; border: 1px solid #cde0f5; border-radius: 4px; padding: 10px 14px; font-family: 'Consolas', 'Courier New', monospace; font-size: 12px; margin: 8px 0; overflow-x: auto; white-space: pre-wrap; word-break: break-all; color: #1e4d8c; }
+    .hint-box { background: #e8f4fd; border-left: 3px solid #5b9bd5; padding: 8px 12px; margin: 8px 0; font-size: 13px; border-radius: 0 3px 3px 0; color: #1e4d8c; }
+    .bonus-tag { display: inline-block; background: #3a7abf; color: #fff; font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 3px; margin-right: 4px; vertical-align: middle; text-transform: uppercase; letter-spacing: 0.3px; }
+    table { border-collapse: collapse; width: 100%; font-size: 13px; margin: 8px 0; }
+    table th { background: #eaf3fb; font-weight: 700; padding: 6px 10px; border: 1px solid #cde0f5; text-align: left; color: #1e4d8c; }
+    table td { padding: 5px 10px; border: 1px solid #cde0f5; }
+    strong { color: #1e4d8c; }
+    .footer { text-align: center; font-size: 12px; color: #999; border-top: 2px solid #eaf3fb; margin-top: 36px; padding-top: 16px; }
+    .footer strong { color: #1e4d8c; }
+    @media print {
+      body { background: #fff; padding: 0; font-size: 12px; }
+      .page { box-shadow: none; padding: 20px 30px; max-width: 100%; }
+      .task-card { page-break-inside: avoid; break-inside: avoid; }
+      code { border: none; background: #f0f0f0; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <img src="../logo.png" alt="Robotivity logo">
+    <div class="header-text">
+      <h1>Zadania praktyczne — Szkolenie UiPath — Dzień 3</h1>
+      <div class="subtitle">Autoryzowany Partner UiPath</div>
+      <div class="subtitle-small">info@robotivity.pl &nbsp;·&nbsp; www.Robotivity.pl &nbsp;·&nbsp; tel.: +48 690 020 576</div>
+    </div>
+  </div>
+
+  <div class="day-header">Dzień 3</div>
+
+  <div class="module-header">Moduł 1 — Pliki i foldery</div>
+
+  <!-- Zadanie 1 -->
+  <div class="task-card">
+    <div class="task-title">Zadanie 1 — Kopiowanie pliku</div>
+    <div class="task-topic">Folder: Dzien3_Zadanie1_Pliki_Foldery/ · Temat: Operacje na plikach + Path.Combine + Path Exists</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Pobierz bieżący katalog projektu (<code>Get Environment Variable</code> → <code>CurrentDirectory</code>)</li>
+        <li>Użytkownik wybiera folder docelowy (<code>Select Folder</code>)</li>
+        <li>Iteruj po plikach <code>*.xlsx</code> w bieżącym folderze (<code>For Each File in Folder</code>)</li>
+        <li>Skopiuj plik do folderu docelowego (<code>Copy File</code>, Overwrite = True)</li>
+        <li>Sprawdź czy skopiowany plik istnieje (<code>Path Exists</code>)</li>
+        <li>Zaloguj wynik: <code>"Czy skopiowano plik? " + bl_czy_skopiowano_plik.ToString</code></li>
+      </ol>
+      <h4>Wskazówki</h4>
+      <ul>
+        <li><code>Get Environment Variable</code> z opcją <code>CurrentDirectory</code> — alternatywa dla hardkodowania ścieżek</li>
+        <li><code>Path.Combine(str_docelowy_folder, "Produkty.xlsx")</code> — bezpieczne łączenie ścieżek</li>
+        <li><code>Path Exists</code> — walidacja czy operacja się powiodła</li>
+      </ul>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>str_aktualny_folder</td><td>String</td><td>Bieżący katalog projektu</td></tr>
+        <tr><td>str_docelowy_folder</td><td>String</td><td>Folder wybrany przez użytkownika</td></tr>
+        <tr><td>bl_czy_skopiowano_plik</td><td>Boolean</td><td>Wynik sprawdzenia Path Exists</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Zadanie 2 -->
+  <div class="task-card">
+    <div class="task-title">Zadanie 2 — Rozpakowanie ZIP i raport CSV</div>
+    <div class="task-topic">Folder: Dzien3_Zadanie2_Pliki_Foldery/ · Temat: Extract ZIP + Build Data Table + Write CSV</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Rozpakuj plik <code>Raporty.zip</code> (<code>Extract/Unzip Files</code>, ExtractToADedicatedFolder = True)</li>
+        <li>Pobierz ścieżkę rozpakowanego folderu z <code>DestinationFolderInfo</code></li>
+        <li>Stwórz tabelę: <code>Nazwa pliku</code>, <code>Folder</code>, <code>Rozszerzenie</code>, <code>Rozmiar</code> (<code>Build Data Table</code>)</li>
+        <li>Iteruj po rozpakowanych plikach (<code>For Each File in Folder</code>):
+          <ul>
+            <li><code>Modify Text</code> — usuń rozszerzenie z nazwy</li>
+            <li><code>Modify Text</code> — rozszerzenie bez kropki + ToUpper</li>
+            <li><code>Add Data Row</code></li>
+          </ul>
+        </li>
+        <li>Zapisz tabelę do pliku CSV (<code>Write CSV</code>)</li>
+      </ol>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>dirinfo_folder_rozpakowane</td><td>DirectoryInfo</td><td>Info o folderze docelowym</td></tr>
+        <tr><td>str_folder_rozpakowane</td><td>String</td><td>Pełna ścieżka folderu</td></tr>
+        <tr><td>dt_detale_plikow</td><td>DataTable</td><td>Tabela z detalami plików</td></tr>
+        <tr><td>str_nazwa_pliku</td><td>String</td><td>Nazwa pliku bez rozszerzenia</td></tr>
+        <tr><td>str_rozszerzenie</td><td>String</td><td>Rozszerzenie (uppercase, bez kropki)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Zadanie 3 -->
+  <div class="task-card">
+    <div class="task-title">Zadanie 3 — Sortowanie plików wg rozszerzenia</div>
+    <div class="task-topic">Folder: Dzien3_Zadanie3_Pliki_Foldery/ · Temat: Switch + Move File + Create Folder + Array</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Zbuduj ścieżkę: <code>Path.Combine(Environment.CurrentDirectory, "Pliki do zadan")</code></li>
+        <li>Stwórz tablicę folderów: <code>{"PDF", "DOCX", "XLSX"}</code></li>
+        <li>W pętli <code>For Each</code> stwórz foldery (<code>Create Folder</code>)</li>
+        <li>W pętli <code>For Each File in Folder</code>:
+          <ul>
+            <li><code>Switch&lt;String&gt;</code> na <code>CurrentFile.Extension.Replace(".",Nothing).ToUpper</code></li>
+            <li>Case <code>PDF</code> → <code>Move File</code> do folderu PDF</li>
+            <li>Case <code>DOCX</code> → <code>Move File</code> do folderu DOCX</li>
+            <li>Case <code>XLSX</code> → <code>Move File</code> do folderu XLSX</li>
+            <li>Default → pusta sekwencja</li>
+          </ul>
+        </li>
+      </ol>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>str_folder_z_plikami</td><td>String</td><td>Ścieżka do folderu z plikami</td></tr>
+        <tr><td>arr_foldery_docelowe</td><td>String[]</td><td>Array z nazwami folderów docelowych</td></tr>
+        <tr><td>ilr_stworzony_folder</td><td>ILocalResource</td><td>Referencja do stworzonego folderu</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="module-header">Moduł 2 — Flowchart: Biała Lista (CEIDG)</div>
+
+  <!-- Ćwiczenie 4 -->
+  <div class="task-card intro">
+    <div class="task-title">Ćwiczenie 4 — Weryfikacja NIP na Białej Liście</div>
+    <div class="task-topic">Folder: Dzien3_Zadanie4_Flowchart_CEIDG/ · Temat: Flowchart + pętla + Check App State + DataTable</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Sprawdź czy plik <code>CEIDG.xlsx</code> istnieje (<code>Path Exists</code>)</li>
+        <li><code>FlowDecision</code> — plik istnieje → kontynuuj; nie → koniec</li>
+        <li>Wczytaj plik do DataTable (<code>Read Range</code>)</li>
+        <li>Otwórz stronę podatki.gov.pl</li>
+        <li>Pętla (strzałka powrotna w Flowchart):
+          <ul>
+            <li>Inkrementuj licznik</li>
+            <li><code>FlowDecision</code> — <code>int_licznik &gt; int_liczba_wierszy</code> → koniec</li>
+            <li>Wpisz NIP z tabeli: <code>dt_CEIDG.Rows(int_licznik - 1)("NIP").ToString</code></li>
+            <li>Kliknij "Szukaj"</li>
+            <li><code>Check App State</code> — sprawdź wynik weryfikacji</li>
+            <li>Zapisz wynik: <code>dt_CEIDG.Rows(int_licznik - 1)("Status VAT") = str_status_VAT</code></li>
+          </ul>
+        </li>
+        <li>Po pętli: <code>Write Range</code> → <code>CEIDG_wyniki.xlsx</code></li>
+      </ol>
+      <div class="hint-box">
+        <strong>Wskazówka:</strong> W Flowchart pętla jest bardziej widoczna niż w Sequence — strzałka powrotna do kroku z inkrementacją licznika tworzy pętlę.
+      </div>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>bl_czy_plik_istnieje</td><td>Boolean</td><td>Czy plik CEIDG.xlsx istnieje</td></tr>
+        <tr><td>dt_CEIDG</td><td>DataTable</td><td>Dane z pliku CEIDG</td></tr>
+        <tr><td>int_liczba_wierszy</td><td>Int32</td><td>Liczba wierszy w tabeli</td></tr>
+        <tr><td>int_licznik</td><td>Int32</td><td>Bieżący numer wiersza</td></tr>
+        <tr><td>str_nip</td><td>String</td><td>Aktualnie przetwarzany NIP</td></tr>
+        <tr><td>str_status_VAT</td><td>String</td><td>Wynik weryfikacji</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="module-header">Moduł 3 — Orchestrator (Assets, Queues, Dispatcher/Performer)</div>
+
+  <!-- Zadanie 5 -->
+  <div class="task-card">
+    <div class="task-title">Zadanie 5 — Logowanie z Orchestratora</div>
+    <div class="task-topic">Folder: Dzien3_Zadanie5_App_Logowanie/ · Temat: Get Credential + SecureString + Pick/PickBranch</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Pobierz login i hasło: <code>Get Credential</code> → Asset: <code>Robotivity_App_Credentials</code>, FolderPath: <code>Robotivity2</code></li>
+        <li>Pobierz ścieżkę: <code>Get Asset</code> → Asset: <code>Sciezka_Aplikacji</code>, FolderPath: <code>Robotivity2</code></li>
+        <li>Zamknij Robotivity (<code>Kill Process "robotivity"</code>)</li>
+        <li>Otwórz Robotivity (<code>Use Application/Browser</code>)</li>
+        <li>Wpisz login (<code>Type Into</code> → Text)</li>
+        <li>Wpisz hasło (<code>Type Into</code> → <strong>SecureText!</strong>)</li>
+        <li>Kliknij "LOG IN"</li>
+        <li>Użyj aktywności <code>Pick</code> z dwoma <code>PickBranch</code>:
+          <ul>
+            <li><strong>Branch 1 (Zalogowano):</strong> Trigger: <code>Check App State</code> na przycisk "EXIT" → Log: "Zalogowano do programu"</li>
+            <li><strong>Branch 2 (Błędne hasło):</strong> Trigger: <code>Check App State</code> na tekst "The User name or password you enter is incorrect" → Click "OK" → Log (Warn): "Nie zalogowano do aplikacji. Sprawdz haslo"</li>
+          </ul>
+        </li>
+      </ol>
+      <div class="hint-box">
+        <strong>Pick/PickBranch</strong> — aktywność "wyścigowa": pierwsza gałąź, której trigger się spełni, wygrywa. Używamy jej zamiast pojedynczego Check App State, bo mamy dwa możliwe scenariusze.<br>
+        <strong>Uwaga:</strong> W Type Into dla hasła używaj właściwości <code>SecureText</code> (nie <code>Text</code>!) — hasło nigdy nie będzie widoczne w logach.
+      </div>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>Username</td><td>String</td><td>Login z Credential</td></tr>
+        <tr><td>Password</td><td>SecureString</td><td>Hasło z Credential</td></tr>
+        <tr><td>str_sciezka_do_aplikacji</td><td>String</td><td>Ścieżka do Robotivity.exe</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Zadanie 6 -->
+  <div class="task-card">
+    <div class="task-title">Zadanie 6 — Dispatcher</div>
+    <div class="task-topic">Folder: Dzien3_Zadanie6_Dispatcher/ · Temat: Bulk Add Queue Items + Add Queue Item z referencjami</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Wczytaj <code>Transactions.xlsx</code> w <code>Try Catch</code>:
+          <ul>
+            <li><strong>Try:</strong> <code>Read Range Workbook</code> (AddHeaders = True)</li>
+            <li><strong>Catch:</strong> <code>Kill Process "EXCEL"</code> → <code>Delay 2s</code> → ponowny Read Range</li>
+          </ul>
+        </li>
+      </ol>
+      <p><strong>Sposób 1 — Bulk Add (hurtowy, zakomentowany w projekcie):</strong></p>
+      <ul>
+        <li><code>Bulk Add Queue Items</code> — QueueName: <code>Robotivity_Bulk</code>, FolderPath: <code>Robotivity2</code></li>
+      </ul>
+      <p><strong>Sposób 2 — Add Queue Item z referencjami (aktywny):</strong></p>
+      <ol>
+        <li>W pętli <code>For Each Row</code>:
+          <ul>
+            <li><code>Add Queue Item</code> — QueueName: <code>Robitivity_Single</code>, FolderPath: <code>Robotivity2</code></li>
+            <li>Reference: <code>CurrentRow.Item("CashIn").ToString + "_" + CurrentRow.Item("OnUsCheck").ToString</code></li>
+            <li>ItemInformation: CashIn, OnUsCheck, NotOnUsCheck</li>
+          </ul>
+        </li>
+        <li>Log Message: "Transakcje dodane do kolejki"</li>
+      </ol>
+      <div class="hint-box">
+        <strong>Wskazówka:</strong> Try Catch wokół Read Range — Excel może blokować plik; w Catch: Kill Process EXCEL + Delay + ponów. Bulk Add jest szybszy, ale nie pozwala nadać indywidualnych referencji.
+      </div>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>dt_transakcje</td><td>DataTable</td><td>Dane z Transactions.xlsx</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Zadanie 7 -->
+  <div class="task-card">
+    <div class="task-title">Zadanie 7 — Performer</div>
+    <div class="task-topic">Folder: Dzien3_Zadanie7_Performer/ · Temat: Flowchart + Queue + Robotivity + obsługa błędów</div>
+    <div class="task-body">
+      <h4>Opis zadania (Flowchart)</h4>
+      <ol>
+        <li><code>Get Asset</code> — pobierz <code>Sciezka_Aplikacji</code> z folderu <code>Robotivity2</code></li>
+        <li><code>Invoke Workflow File</code> — <code>Robotivity_App_Logowanie.xaml</code> (argumenty: <code>str_sciezka_aplikacji</code> in, <code>out_bool_zalogowano</code> out)</li>
+        <li><code>FlowDecision</code> — <code>out_bool_zalogowano</code>?
+          <ul>
+            <li>False → "Koniec Pracy Robota" (If: zalogowano → log / Else → log "Nie zalogowano") + <code>Kill Process "robotivity"</code></li>
+            <li>True → kontynuuj</li>
+          </ul>
+        </li>
+        <li>Pętla (strzałka powrotna):
+          <ul>
+            <li><code>Try Catch</code>: <code>Get Transaction Item</code> z kolejki <code>Robitivity_Single</code> (FolderPath: <code>Robotivity2</code>)
+              <ul><li>Catch: <code>qi_transaction_item = Nothing</code></li></ul>
+            </li>
+            <li><code>FlowDecision</code> — <code>qi_transaction_item IsNot Nothing</code>?</li>
+            <li>True → Log "Reference: " + Reference → <code>Invoke Workflow File</code> <code>Procesowanie_Transakcji.xaml</code></li>
+            <li>W <code>Procesowanie_Transakcji.xaml</code>: wyciągnij dane, sprawdź <code>.IsNumeric</code>, Type Into + Click Accept lub Set Transaction Status = Failed</li>
+          </ul>
+        </li>
+      </ol>
+      <div class="hint-box">
+        <strong>Wskazówka:</strong> Logowanie i procesowanie są wydzielone do osobnych plików .xaml (reużywalność). W Try Catch: gdy kolejka pusta → Exception → Catch: qi_transaction_item = Nothing → pętla się zakończy.
+      </div>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>out_bool_zalogowano</td><td>Boolean</td><td>Czy logowanie się powiodło (z Invoke Workflow)</td></tr>
+        <tr><td>str_sciezka_aplikacji</td><td>String</td><td>Ścieżka do Robotivity (z Get Asset)</td></tr>
+        <tr><td>qi_transaction_item</td><td>QueueItem</td><td>Bieżąca transakcja z kolejki</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Bonus - Dashboard -->
+  <div class="task-card">
+    <div class="task-title"><span class="bonus-tag">Bonus</span> Zadanie dodatkowe — Dashboard transakcji</div>
+    <div class="task-topic">Temat: Podsumowanie przetworzonych transakcji w raporcie Excel</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Na początku procesu: <code>int_successful = 0</code>, <code>int_failed_business = 0</code></li>
+        <li>W Performerze po Set Transaction Status: zlicz sukcesy/porażki</li>
+        <li>Na końcu: <code>Build Data Table</code> → <code>Add Data Row</code> → <code>Write Range</code> do <code>Dashboard_transakcji.xlsx</code></li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- Bonus - Monitoring folderu -->
+  <div class="task-card">
+    <div class="task-title"><span class="bonus-tag">Bonus</span> Zadanie dodatkowe — Monitoring folderu z raportem email</div>
+    <div class="task-topic">Temat: For Each File in Folder + CreationTime + SMTP (łączenie Dnia 2 z Dniem 3)</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Monitoruj folder "Raporty" — sprawdź pliki <code>*.xlsx</code> utworzone w ostatnich 24h</li>
+        <li>Użyj: <code>dat_granica = Now.AddHours(-24)</code></li>
+        <li>Zbierz nazwy nowych plików do <code>List(Of String)</code></li>
+        <li>Jeśli są nowe pliki — wyślij email z listą przez SMTP</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="footer">
+    <strong>Robotivity®</strong> — Autoryzowany Partner UiPath<br>
+    info@robotivity.pl · www.Robotivity.pl
+  </div>
+
+</div>
+</body>
+</html>
