@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zadania praktyczne — Szkolenie UiPath — Dzień 2</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px; line-height: 1.6; color: #222; background: #e8f1fb; padding: 20px; }
+    .page { max-width: 900px; margin: 0 auto; background: #fff; padding: 40px 50px; box-shadow: 0 2px 12px rgba(30,77,140,0.13); }
+    .header { display: flex; align-items: center; gap: 28px; border-bottom: 3px solid #5b9bd5; padding-bottom: 20px; margin-bottom: 30px; }
+    .header img { height: 70px; width: auto; flex-shrink: 0; }
+    .header-text { flex: 1; }
+    .header-text h1 { font-size: 22px; color: #1e4d8c; font-weight: 700; letter-spacing: 0.2px; margin-bottom: 3px; }
+    .header-text .subtitle { font-size: 13px; color: #5b9bd5; font-weight: 600; }
+    .header-text .subtitle-small { font-size: 12px; color: #999; margin-top: 2px; }
+    .day-header { background: #1e4d8c; color: #fff; font-size: 15px; font-weight: 700; padding: 10px 18px; margin: 30px 0 20px 0; border-radius: 4px; letter-spacing: 1.5px; text-transform: uppercase; }
+    .module-header { background: #eaf3fb; color: #1e4d8c; font-size: 13px; font-weight: 700; padding: 8px 16px; margin: 24px 0 14px 0; border-left: 4px solid #5b9bd5; border-radius: 0 3px 3px 0; text-transform: uppercase; letter-spacing: 0.5px; }
+    .task-card { border: 1px solid #cde0f5; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
+    .task-card.intro { border-color: #b3d1f0; }
+    .task-title { background: #5b9bd5; color: #fff; font-weight: 700; font-size: 14px; padding: 9px 16px; }
+    .task-card.intro .task-title { background: #3a7abf; }
+    .task-topic { background: #f0f7ff; font-size: 12px; color: #2a6096; padding: 5px 16px; border-bottom: 1px solid #cde0f5; font-style: italic; }
+    .task-body { padding: 14px 16px; }
+    .task-body h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #1e4d8c; margin: 12px 0 6px 0; letter-spacing: 0.6px; }
+    .task-body h4:first-child { margin-top: 0; }
+    .task-body ol, .task-body ul { padding-left: 20px; }
+    .task-body ol li, .task-body ul li { margin-bottom: 4px; }
+    code { background: #eaf3fb; color: #1e4d8c; padding: 1px 5px; border-radius: 3px; font-family: 'Consolas', 'Courier New', monospace; font-size: 12px; border: 1px solid #cde0f5; }
+    pre { background: #f4f9ff; border: 1px solid #cde0f5; border-radius: 4px; padding: 10px 14px; font-family: 'Consolas', 'Courier New', monospace; font-size: 12px; margin: 8px 0; overflow-x: auto; white-space: pre-wrap; word-break: break-all; color: #1e4d8c; }
+    .hint-box { background: #e8f4fd; border-left: 3px solid #5b9bd5; padding: 8px 12px; margin: 8px 0; font-size: 13px; border-radius: 0 3px 3px 0; color: #1e4d8c; }
+    .bonus-tag { display: inline-block; background: #3a7abf; color: #fff; font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 3px; margin-right: 4px; vertical-align: middle; text-transform: uppercase; letter-spacing: 0.3px; }
+    table { border-collapse: collapse; width: 100%; font-size: 13px; margin: 8px 0; }
+    table th { background: #eaf3fb; font-weight: 700; padding: 6px 10px; border: 1px solid #cde0f5; text-align: left; color: #1e4d8c; }
+    table td { padding: 5px 10px; border: 1px solid #cde0f5; }
+    strong { color: #1e4d8c; }
+    .footer { text-align: center; font-size: 12px; color: #999; border-top: 2px solid #eaf3fb; margin-top: 36px; padding-top: 16px; }
+    .footer strong { color: #1e4d8c; }
+    @media print {
+      body { background: #fff; padding: 0; font-size: 12px; }
+      .page { box-shadow: none; padding: 20px 30px; max-width: 100%; }
+      .task-card { page-break-inside: avoid; break-inside: avoid; }
+      code { border: none; background: #f0f0f0; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <img src="../logo.png" alt="Robotivity logo">
+    <div class="header-text">
+      <h1>Zadania praktyczne — Szkolenie UiPath — Dzień 2</h1>
+      <div class="subtitle">Autoryzowany Partner UiPath</div>
+      <div class="subtitle-small">info@robotivity.pl &nbsp;·&nbsp; www.Robotivity.pl &nbsp;·&nbsp; tel.: +48 690 020 576</div>
+    </div>
+  </div>
+
+  <div class="day-header">Dzień 2</div>
+
+  <div class="module-header">Moduł 1 — Data Scraping</div>
+
+  <!-- Ćwiczenie 1 - CEIDG -->
+  <div class="task-card intro">
+    <div class="task-title">Ćwiczenie 1 — Data Scraping: CEIDG</div>
+    <div class="task-topic">Folder: Dzien2_Zadanie1_DataScraping_CEIDG/ · Temat: Scraping danych + filtrowanie + sortowanie + eksport</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Wejdź na stronę CEIDG: <code>aplikacja.ceidg.gov.pl/ceidg.public.ui/search.aspx</code></li>
+        <li>Wpisz <strong>"Wrocław"</strong> w pole Miejscowość i <strong>"Hubska"</strong> w pole Ulica</li>
+        <li>Kliknij przycisk "Szukaj"</li>
+        <li>Pobierz <strong>max 50 wpisów</strong> z tabeli wyników (kolumny: Firma, Przedsiebiorca, NIP, REGON, Informacje)</li>
+        <li>Usuń wpisy, w których <strong>brakuje REGON lub NIP</strong> — <code>Filter Data Table</code> w trybie <strong>Remove</strong></li>
+        <li>Posortuj firmy po kolumnie <code>"Firma"</code> (Ascending)</li>
+        <li>Zapisz wynik do pliku <code>CEIDG_Tabela_Filtr.xlsx</code> (arkusz: <code>CEIDG</code>)</li>
+      </ol>
+      <h4>Wskazówki</h4>
+      <ul>
+        <li><code>Type Into</code> do wpisania kryteriów wyszukiwania (Miejscowość + Ulica)</li>
+        <li><code>Check/Uncheck</code> — zaznaczenie opcji wyszukiwania</li>
+        <li><code>Delay 2s</code> po kliknięciu "Szukaj" — odczekaj na załadowanie wyników</li>
+        <li><code>Extract Table Data</code> z ustawieniami: LimitExtractionTo: <code>"Rows"</code>, MaximumResults: <code>50</code></li>
+        <li><code>Filter Data Table</code> w trybie <strong>Remove</strong> — usuń wiersze gdzie REGON jest puste <strong>OR</strong> NIP jest puste</li>
+        <li><code>Sort Data Table</code> po <code>"Firma"</code> rosnąco</li>
+      </ul>
+      <div class="hint-box">
+        <strong>Uwaga:</strong> W Filter Data Table łatwo pomylić tryb Keep z Remove. Czytaj warunek na głos: "USUŃ wiersze, w których REGON jest puste".
+      </div>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>dt_CEIDG</td><td>DataTable</td><td>Pobrane dane z CEIDG</td></tr>
+        <tr><td>dt_CEIDG_Filtr</td><td>DataTable</td><td>Dane po filtrowaniu</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="module-header">Moduł 2 — Poczta elektroniczna</div>
+
+  <!-- Zadanie 2 - Wysyłka maila -->
+  <div class="task-card">
+    <div class="task-title">Zadanie 2 — Wysyłka maila z załącznikiem</div>
+    <div class="task-topic">Folder: Dzien2_Zadanie2_WysylkaMailaZalacznik/ · Temat: SMTP + dynamiczna treść + załącznik</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Przygotuj ścieżkę do pliku <code>Produkty.xlsx</code> znajdującego się w folderze projektu</li>
+        <li>Pobierz dane logowania: <code>Get Credential</code> — AssetName: <code>Robotivity_Credentials</code>, FolderPath: <code>Robotivity2</code></li>
+        <li>Wyślij email przez SMTP:
+          <ul>
+            <li><strong>Do:</strong> <code>zadaniemail123@gmail.com</code></li>
+            <li><strong>Temat:</strong> <code>"Wiadomosc z raportem"</code></li>
+            <li><strong>Treść:</strong> <code>"Czesc" + vbNewLine + "W zalaczniku raport Produkty.xlsx z dnia: " + Now.ToShortDateString + vbNewLine + "Pozdrawiam"</code></li>
+            <li><strong>Załącznik:</strong> <code>Produkty.xlsx</code></li>
+          </ul>
+        </li>
+      </ol>
+      <h4>Wskazówki</h4>
+      <ul>
+        <li>Użyj <code>Environment.CurrentDirectory + "\Produkty.xlsx"</code> do zbudowania ścieżki</li>
+        <li><code>Get Credential</code> — AssetName: <code>Robotivity_Credentials</code>, FolderPath: <code>Robotivity2</code></li>
+        <li><code>Send SMTP Mail Message</code> — Server: <code>smtp.gmail.com</code>, Port: <code>465</code>, SSL: True</li>
+        <li>Nowa linia w treści: <code>vbNewLine</code></li>
+        <li>Aktualna data: <code>Now.ToShortDateString</code></li>
+      </ul>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>str_sciezka_raport</td><td>String</td><td>Pełna ścieżka do pliku</td></tr>
+        <tr><td>str_username</td><td>String</td><td>Login z Orchestratora</td></tr>
+        <tr><td>sstr_password</td><td>SecureString</td><td>Hasło z Orchestratora</td></tr>
+        <tr><td>str_status_code</td><td>String</td><td>Kod statusu wysyłki SMTP</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Zadanie 3 - Masowa wysyłka -->
+  <div class="task-card">
+    <div class="task-title">Zadanie 3 — Masowa wysyłka maili</div>
+    <div class="task-topic">Folder: Dzien2_Zadanie3_MasowaWysylkaMaili/ · Temat: Pętla + warunek + spersonalizowane emaile</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Wczytaj plik <code>Koszulki_email.xlsx</code> (arkusz: <code>Arkusz1</code>) z danymi zamówień</li>
+        <li>Pobierz dane logowania: <code>Get Credential</code> — AssetName: <code>Robotivity_Credentials</code>, FolderPath: <code>Robotivity2</code></li>
+        <li>Dla każdego wiersza (<code>For Each Row in Data Table</code>):
+          <ul>
+            <li>Wyciągnij dane: nazwa, rozmiar, kolor, status, data wysyłki, email odbiorcy</li>
+            <li>Warunek: <code>str_status = "Zamówiono" Or str_status = "Zamowiono"</code></li>
+            <li>Jeśli <strong>tak</strong> — wczytaj treść z <code>tresc_emaila_zamowiono.txt</code> + <code>String.Format</code></li>
+            <li>Jeśli <strong>nie</strong> — wczytaj treść z <code>tresc_emaila_nie_zamowiono.txt</code> + <code>String.Format</code></li>
+            <li>Temat: <code>"Status Twojego zamowienia: " + str_status</code></li>
+            <li>Wyślij przez <code>Invoke Workflow File</code> → <code>Send_SMTP_Notification.xaml</code></li>
+          </ul>
+        </li>
+      </ol>
+      <h4>Wskazówki</h4>
+      <ul>
+        <li><code>Read Range</code> do wczytania pliku Excel z danymi</li>
+        <li>W pętli: <code>Read Text File</code> wczytuje szablon, <code>String.Format</code> wstawia dane</li>
+        <li>Warunek uwzględnia polskie znaki: <code>"Zamówiono" Or "Zamowiono"</code></li>
+        <li>Wysyłka przez osobny workflow <code>Send_SMTP_Notification.xaml</code> z argumentami (in/out)</li>
+        <li>Argument <code>out_str_Notification</code> zwraca informację o wyniku wysyłki</li>
+      </ul>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>dt_koszulki</td><td>DataTable</td><td>Dane z pliku Excel</td></tr>
+        <tr><td>str_username</td><td>String</td><td>Login z Orchestratora</td></tr>
+        <tr><td>sstr_password</td><td>SecureString</td><td>Hasło z Orchestratora</td></tr>
+        <tr><td>str_tresc_maila</td><td>String</td><td>Treść emaila (po String.Format)</td></tr>
+        <tr><td>str_temat_maila</td><td>String</td><td>Temat emaila</td></tr>
+        <tr><td>str_powiadomienie</td><td>String</td><td>Wynik wysyłki (out z workflow)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Zadanie 4 - Pobieranie emaili z załącznikami -->
+  <div class="task-card">
+    <div class="task-title">Zadanie 4 — Pobieranie emaili i załączników</div>
+    <div class="task-topic">Folder: Dzien2_Zadanie4_PobieranieEmail_Zalaczniki/ · Temat: IMAP + filtrowanie + zapis załączników</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li><code>Create Folder</code> — stwórz folder <code>Zalaczniki</code> w katalogu projektu</li>
+        <li>Pobierz dane logowania: <code>Get Credential</code> — AssetName: <code>Robotivity_Credentials</code>, FolderPath: <code>Robotivity2</code></li>
+        <li>Pobierz emaile z folderu <code>"Robotivity"</code> przez IMAP (max 30, NewestFirst)</li>
+        <li>Dla każdego emaila (<code>For Each</code> — typ <code>MailMessage</code>):
+          <ul>
+            <li>Jeśli <code>currentMailMessage.Attachments.Count &gt; 0</code>:</li>
+            <li>Zwiększ licznik, zaloguj nazwę załącznika</li>
+            <li><code>Save Email Attachments</code> do folderu <code>Zalaczniki</code></li>
+          </ul>
+        </li>
+        <li>Log Message: <code>"Ilosc maili z zalacznikiem: " + int_counter.ToString</code></li>
+        <li>Spakuj do ZIP: <code>"Zalaczniki_" + Now.ToString("HH.mm.ss") + ".zip"</code></li>
+      </ol>
+      <h4>Wskazówki</h4>
+      <ul>
+        <li><code>Create Folder</code> — <code>Environment.CurrentDirectory + "\Zalaczniki"</code></li>
+        <li><code>Get IMAP Mail Messages</code> — Server: <code>imap.gmail.com</code>, Port: <code>993</code>, SSL: True, Folder: <code>"Robotivity"</code>, Top: <code>30</code></li>
+        <li><code>For Each</code> po liście emaili — filtr: <code>Attachments.Count &gt; 0</code></li>
+        <li><code>Save Email Attachments</code> — ExcludeInlineAttachments: True</li>
+        <li><code>Compress/Zip Files</code> do spakowania folderu z załącznikami</li>
+      </ul>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>str_username</td><td>String</td><td>Login z Orchestratora</td></tr>
+        <tr><td>sstr_password</td><td>SecureString</td><td>Hasło z Orchestratora</td></tr>
+        <tr><td>lst_lista_maili</td><td>List&lt;MailMessage&gt;</td><td>Pobrane emaile</td></tr>
+        <tr><td>int_counter</td><td>Int32</td><td>Licznik emaili z załącznikami</td></tr>
+        <tr><td>str_nazwa_ZIP</td><td>String</td><td>Nazwa pliku ZIP</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Zadanie 5 - Pobieranie maili do tabelki -->
+  <div class="task-card">
+    <div class="task-title">Zadanie 5 — Pobieranie maili do tabelki</div>
+    <div class="task-topic">Folder: Dzien2_Zadanie5_PobieranieMaili_Tabelka/ · Temat: IMAP + filtrowanie + DataTable + raport Excel</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Pobierz dane logowania: <code>Get Credential</code> — AssetName: <code>Robotivity_Credentials</code>, FolderPath: <code>Robotivity2</code></li>
+        <li><code>Build Data Table</code> z kolumnami: <code>Numer_Zamowienia</code>, <code>Data_Zamowienia</code>, <code>Email</code></li>
+        <li>Pobierz emaile z folderu <code>"Robotivity"</code> przez IMAP (max 30)</li>
+        <li>Dla każdego emaila (<code>For Each</code> — typ <code>MailMessage</code>):
+          <ul>
+            <li>Jeśli temat zawiera <strong>"Zamówienie"</strong>:</li>
+            <li>Numer zamówienia: <code>currentMailMessage.Subject.Split(" ").Last</code></li>
+            <li>Data: <code>currentMailMessage.DateAsDateTime.ToString("dd.MM.yyyy")</code></li>
+            <li>Email: <code>currentMailMessage.Sender.Address</code></li>
+            <li><code>Add Data Row</code> — dodaj wiersz do <code>dt_raport</code></li>
+          </ul>
+        </li>
+        <li>Jeśli <code>dt_raport.Rows.Count &gt; 0</code> → <code>Write Range</code> do <code>Zamowienia.xlsx</code> (arkusz: <code>Zamowienia</code>)</li>
+      </ol>
+      <h4>Wskazówki</h4>
+      <ul>
+        <li><code>Build Data Table</code> z kolumnami: <code>Numer_Zamowienia</code>, <code>Data_Zamowienia</code>, <code>Email</code></li>
+        <li><code>.Subject.Split(" ").Last</code> — wyciągnięcie numeru zamówienia z tematu</li>
+        <li><code>.DateAsDateTime.ToString("dd.MM.yyyy")</code> — formatowanie daty (nie <code>.Date</code>!)</li>
+        <li><code>.Sender.Address</code> — adres nadawcy (nie <code>.From.Address</code>!)</li>
+        <li><code>Add Data Row</code> — ArrayRow: <code>{str_numer_zamowienia, str_data_zamowienia, str_email_zamowienia}</code></li>
+        <li><code>If</code> na końcu sprawdza czy tabela ma wiersze przed zapisem</li>
+      </ul>
+      <h4>Zmienne</h4>
+      <table>
+        <tr><th>Nazwa</th><th>Typ</th><th>Opis</th></tr>
+        <tr><td>str_username</td><td>String</td><td>Login z Orchestratora</td></tr>
+        <tr><td>sstr_password</td><td>SecureString</td><td>Hasło z Orchestratora</td></tr>
+        <tr><td>lst_listamaili</td><td>List&lt;MailMessage&gt;</td><td>Pobrane emaile</td></tr>
+        <tr><td>dt_raport</td><td>DataTable</td><td>Tabela z danymi zamówień</td></tr>
+        <tr><td>str_numer_zamowienia</td><td>String</td><td>Numer zamówienia (z tematu)</td></tr>
+        <tr><td>str_data_zamowienia</td><td>String</td><td>Data zamówienia</td></tr>
+        <tr><td>str_email_zamowienia</td><td>String</td><td>Email nadawcy</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Zadanie dodatkowe - odpowiedź -->
+  <div class="task-card">
+    <div class="task-title"><span class="bonus-tag">Bonus</span> Zadanie dodatkowe — Automatyczna odpowiedź na emaile</div>
+    <div class="task-topic">Temat: Rozszerzenie o automatyczną odpowiedź SMTP na emaile z zamówieniami</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>W pętli z Zadania 5, po dodaniu wiersza do tabeli, wyślij automatyczną odpowiedź</li>
+        <li>Treść: <code>"Dzien dobry, Zamówienie [numer] zostalo zarejestrowane w systemie. Pozdrawiam, Robot"</code></li>
+        <li>Temat: <code>"RE: " + currentMailMessage.Subject</code></li>
+        <li>Odbiorca: adres nadawcy oryginalnego emaila</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- Zadanie dodatkowe - szczegóły firm -->
+  <div class="task-card">
+    <div class="task-title"><span class="bonus-tag">Bonus</span> Zadanie dodatkowe — Szczegóły firm z CEIDG</div>
+    <div class="task-topic">Temat: Nawigacja po URL-ach + pobieranie danych szczegółowych z Try Catch</div>
+    <div class="task-body">
+      <h4>Opis zadania</h4>
+      <ol>
+        <li>Dodaj kolumnę <code>"Szczegóły"</code> do wynikowego DataTable z Ćwiczenia 1</li>
+        <li>Dla każdej firmy otwórz jej stronę szczegółów (korzystając z kolumny URL)</li>
+        <li>Pobierz dane kontaktowe (<code>Get Text</code>) z <code>Try Catch</code> (obsłuż brak danych)</li>
+        <li>Zapisz zaktualizowaną tabelę</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="footer">
+    <strong>Robotivity®</strong> — Autoryzowany Partner UiPath<br>
+    info@robotivity.pl · www.Robotivity.pl
+  </div>
+
+</div>
+</body>
+</html>
