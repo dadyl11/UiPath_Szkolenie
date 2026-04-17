@@ -1,7 +1,0 @@
-Witaj {0},
-
-Twoja koszulka w rozmiarze {1} i kolorze {2} została zamówiona.
-Data wysyłki: {3}
-
-Pozdrawiam,
-Twoj Robot

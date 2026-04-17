@@ -1,7 +1,0 @@
-Witaj {0},
-
-Twoja koszulka w rozmiarze {1} i kolorze {2} nie została zamówiona.
-Status zamówienia: {3}, prosze skontaktuj się z działem obsługi.
-
-Pozdrawiam,
-Twoj Robot
