@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instrukcja — Konfiguracja Unattended Robot</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:   #1e4d8c;
+  --blue:   #5b9bd5;
+  --light:  #eaf3fb;
+  --border: #cde0f5;
+  --text:   #222;
+  --muted:  #666;
+  --sidebar-w: 270px;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text);
+  background: #f4f8fd;
+  display: flex;
+}
+
+#sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: #0f2744;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+}
+
+.sidebar-header {
+  padding: 20px 16px 14px;
+  border-bottom: 1px solid #1e4d8c;
+}
+
+.sidebar-header .title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.3;
+}
+
+.sidebar-header .sub {
+  font-size: 11px;
+  color: #5b9bd5;
+  margin-top: 3px;
+}
+
+.sidebar-search {
+  padding: 10px 12px;
+  border-bottom: 1px solid #1a3a60;
+}
+
+.sidebar-search input {
+  width: 100%;
+  background: #1a3a60;
+  border: 1px solid #2a5a90;
+  border-radius: 4px;
+  padding: 6px 10px;
+  color: #d0e8f8;
+  font-size: 12px;
+  outline: none;
+}
+
+.sidebar-search input::placeholder { color: #5b7a9a; }
+.sidebar-search input:focus { border-color: #5b9bd5; }
+
+nav { flex: 1; padding: 8px 0 20px; }
+
+.nav-day {
+  padding: 10px 16px 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #5b9bd5;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.nav-module {
+  padding: 7px 16px 3px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #7fb3e0;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-top: 4px;
+}
+
+.nav-item {
+  display: block;
+  padding: 6px 16px 6px 24px;
+  font-size: 12.5px;
+  color: #a0c0e0;
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all 0.12s;
+  cursor: pointer;
+  line-height: 1.35;
+}
+
+.nav-item:hover {
+  color: #fff;
+  background: rgba(91,155,213,0.1);
+  border-left-color: #5b9bd5;
+}
+
+.nav-item.active {
+  color: #fff;
+  background: rgba(91,155,213,0.18);
+  border-left-color: #5b9bd5;
+  font-weight: 600;
+}
+
+.nav-item.exercise {
+  padding-left: 34px;
+  font-size: 12px;
+}
+
+#main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  padding: 32px 40px 60px;
+  max-width: 860px;
+}
+
+.section { margin-bottom: 48px; }
+
+.day-divider {
+  background: var(--navy);
+  color: #fff;
+  padding: 14px 22px;
+  border-radius: 6px;
+  margin-bottom: 28px;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.module-heading {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+  border-left: 4px solid var(--blue);
+  padding-left: 12px;
+  margin-bottom: 14px;
+}
+
+.exercise-card {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  background: #fff;
+}
+
+.exercise-title {
+  background: var(--blue);
+  color: #fff;
+  font-weight: 700;
+  font-size: 13.5px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.exercise-title .goal {
+  font-size: 11.5px;
+  font-weight: 400;
+  color: #d0e8f8;
+  margin-top: 2px;
+}
+
+.exercise-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 14px; }
+
+.theory-box {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+
+.steps { padding-left: 20px; }
+.steps li { margin-bottom: 5px; font-size: 13.5px; }
+.steps li::marker { color: var(--blue); font-weight: 700; }
+
+.bullets { padding-left: 18px; }
+.bullets li { margin-bottom: 4px; font-size: 13.5px; }
+
+.edu-list { display: flex; flex-direction: column; gap: 5px; }
+
+.edu-item {
+  background: var(--light);
+  border-left: 3px solid var(--blue);
+  padding: 6px 12px;
+  border-radius: 0 4px 4px 0;
+  font-size: 13px;
+  color: #1a3a60;
+}
+
+.var-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  font-family: 'Consolas', 'Courier New', monospace;
+}
+
+.var-table th {
+  background: var(--navy);
+  color: #fff;
+  padding: 5px 10px;
+  text-align: left;
+  font-weight: 600;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 11px;
+}
+
+.var-table tr:nth-child(even) { background: var(--light); }
+.var-table td { padding: 5px 10px; border-bottom: 1px solid var(--border); }
+
+table.gen {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+table.gen th {
+  background: var(--navy);
+  color: #fff;
+  padding: 7px 12px;
+  text-align: left;
+  font-weight: 600;
+}
+
+table.gen tr:nth-child(even) { background: var(--light); }
+table.gen td { padding: 6px 12px; border-bottom: 1px solid var(--border); }
+
+code {
+  background: var(--light);
+  color: var(--navy);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 12px;
+  border: 1px solid var(--border);
+}
+
+pre {
+  background: #f0f6ff;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 12px 14px;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 12.5px;
+  color: var(--navy);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.tip {
+  background: #e8f4fd;
+  border-left: 3px solid var(--blue);
+  padding: 9px 13px;
+  border-radius: 0 5px 5px 0;
+  font-size: 13px;
+  color: #1a3a60;
+}
+
+.warn {
+  background: #fff8e1;
+  border-left: 3px solid #f9a825;
+  padding: 9px 13px;
+  border-radius: 0 5px 5px 0;
+  font-size: 13px;
+  color: #5a4000;
+}
+
+.warn strong, .tip strong { color: inherit; font-weight: 700; }
+
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.badge {
+  display: inline-block;
+  background: var(--blue);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 10px;
+  vertical-align: middle;
+  margin-right: 3px;
+}
+
+.badge.green  { background: #2e7d32; }
+.badge.red    { background: #c62828; }
+.badge.orange { background: #e65100; }
+
+strong { color: var(--navy); }
+
+.theory-heading {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 16px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.info {
+  background: #e8f5e9;
+  border-left: 3px solid #2e7d32;
+  padding: 9px 13px;
+  border-radius: 0 5px 5px 0;
+  font-size: 13px;
+  color: #1b5e20;
+}
+
+/* Header */
+.material-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  border-bottom: 3px solid var(--blue);
+  padding-bottom: 18px;
+  margin-bottom: 28px;
+}
+.material-header img { height: 64px; width: auto; flex-shrink: 0; }
+.material-header-text h1 { font-size: 20px; color: var(--navy); font-weight: 700; margin-bottom: 2px; }
+.material-header-text .subtitle { font-size: 13px; color: var(--blue); font-weight: 600; }
+.material-header-text .subtitle-small { font-size: 11px; color: #999; margin-top: 2px; }
+
+/* Footer */
+.material-footer {
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+  border-top: 2px solid var(--light);
+  margin-top: 40px;
+  padding-top: 16px;
+}
+.material-footer strong { color: var(--navy); }
+
+@page { margin: 10mm 0 10mm 0; }
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+  body { background: #fff; }
+  #sidebar { display: none; }
+  #main { margin-left: 0; padding: 20px 30px; max-width: 100%; }
+  .material-header img { height: 50px; }
+
+  .exercise-card,
+  table.gen, .var-table,
+  pre,
+  .tip, .warn, .info,
+  .edu-item { page-break-inside: avoid; break-inside: avoid; }
+
+  .module-heading,
+  .theory-heading,
+  .day-divider,
+  .label { page-break-after: avoid; break-after: avoid; }
+
+  .theory-box { page-break-before: auto; break-before: auto; }
+  .section { page-break-after: auto; break-after: auto; }
+  .material-footer { page-break-before: avoid; break-before: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<aside id="sidebar">
+  <div class="sidebar-header">
+    <div class="title">Instrukcja — Unattended Robot</div>
+    <div class="sub">Szkolenie UiPath | Konfiguracja krok po kroku</div>
+  </div>
+  <div class="sidebar-search">
+    <input type="text" placeholder="Szukaj w instrukcji..." oninput="filterNav(this.value)">
+  </div>
+  <nav>
+    <div class="nav-day">Konfiguracja Unattended Robot</div>
+
+    <div class="nav-module">Wprowadzenie</div>
+    <a class="nav-item" href="#intro">Czym jest Unattended Robot?</a>
+    <a class="nav-item" href="#wymagania">Wymagania wstepne</a>
+
+    <div class="nav-module">Community / Enterprise Cloud</div>
+    <a class="nav-item exercise" href="#cloud-1">1. Logowanie do Orchestratora</a>
+    <a class="nav-item exercise" href="#cloud-2">2. Dodaj Machine Template</a>
+    <a class="nav-item exercise" href="#cloud-3">3. Polacz UiPath Robot</a>
+    <a class="nav-item exercise" href="#cloud-4">4. Konfiguracja konta Unattended</a>
+    <a class="nav-item exercise" href="#cloud-5">5. Przypisanie do folderu</a>
+    <a class="nav-item exercise" href="#cloud-6">6. Publikacja i harmonogram</a>
+    <a class="nav-item exercise" href="#cloud-7">7. Weryfikacja</a>
+
+    <div class="nav-module">On-Premise</div>
+    <a class="nav-item exercise" href="#onprem-1">1. Logowanie do Orchestratora</a>
+    <a class="nav-item exercise" href="#onprem-2">2. Sprawdz licencje</a>
+    <a class="nav-item exercise" href="#onprem-3">3. Dodaj maszyne</a>
+    <a class="nav-item exercise" href="#onprem-4">4. Instalacja i polaczenie</a>
+    <a class="nav-item exercise" href="#onprem-5">5. Stworz Unattended Robot</a>
+    <a class="nav-item exercise" href="#onprem-6">6. Folder i proces</a>
+    <a class="nav-item exercise" href="#onprem-7">7. Konfiguracja konta Windows</a>
+
+    <div class="nav-module">Pomoc</div>
+    <a class="nav-item" href="#troubleshoot">Rozwiazywanie problemow</a>
+    <a class="nav-item" href="#best-practices">Dobre praktyki</a>
+    <a class="nav-item" href="#schemat">Schemat — podsumowanie</a>
+  </nav>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<main id="main">
+
+<!-- HEADER -->
+<div class="material-header">
+  <img src="logo.png" alt="Robotivity logo">
+  <div class="material-header-text">
+    <h1>Konfiguracja Unattended Robot</h1>
+    <div class="subtitle">Autoryzowany Partner UiPath</div>
+    <div class="subtitle-small">info@robotivity.pl &nbsp;&middot;&nbsp; www.Robotivity.pl &nbsp;&middot;&nbsp; tel.: +48 690 020 576</div>
+  </div>
+</div>
+
+<!-- ===== DAY DIVIDER ===== -->
+<div class="day-divider">Instrukcja — Konfiguracja Unattended Robot krok po kroku</div>
+
+<!-- ============================================================ -->
+<!-- WPROWADZENIE                                                  -->
+<!-- ============================================================ -->
+
+<div class="section" id="intro">
+  <div class="module-heading">Czym jest Unattended Robot?</div>
+  <div class="theory-box">
+    <p>Unattended Robot to robot UiPath, ktory dziala <strong>bez nadzoru uzytkownika</strong> — na maszynie, na ktorej nikt nie musi byc zalogowany. Procesy sa uruchamiane automatycznie z poziomu Orchestratora (harmonogram, trigger, API).</p>
+
+    <div class="theory-heading">Porownanie typow robotow</div>
+    <table class="gen" style="margin-top: 8px;">
+      <tr><th>Cecha</th><th>Attended</th><th>Unattended</th></tr>
+      <tr><td>Wymaga zalogowanego uzytkownika</td><td>Tak</td><td>Nie</td></tr>
+      <tr><td>Uruchamianie</td><td>Reczne (z Assistant)</td><td>Automatyczne (Orchestrator)</td></tr>
+      <tr><td>Sesja</td><td>Uzytkownika</td><td>Dedykowana (logon session)</td></tr>
+      <tr><td>Harmonogram</td><td>Nie</td><td>Tak</td></tr>
+      <tr><td>Idealne do</td><td>Asystowanie pracownikowi</td><td>Pelna automatyzacja procesow</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section" id="wymagania">
+  <div class="module-heading">Wymagania wstepne</div>
+  <div class="theory-box">
+    <div class="edu-list">
+      <div class="edu-item"><strong>Maszyna z systemem Windows</strong> (Server lub Pro/Enterprise) z zainstalowanym UiPath Robot</div>
+      <div class="edu-item"><strong>UiPath Orchestrator</strong> — Community Cloud lub On-Premise</div>
+      <div class="edu-item"><strong>Licencja Unattended</strong> — przypisana do tenanta</div>
+      <div class="edu-item"><strong>Konto Windows</strong> na maszynie robota (lokalne lub domenowe) z uprawnieniami do logowania jako usluga</div>
+      <div class="edu-item"><strong>UiPath Robot</strong> zainstalowany w trybie <strong>Service Mode</strong> (nie User Mode)</div>
+    </div>
+    <div class="warn" style="margin-top: 14px;"><strong>Wazne:</strong> Robot w trybie User Mode dziala tylko gdy uzytkownik jest zalogowany. Dla Unattended wymagany jest <strong>Service Mode</strong> (instalacja jako usluga Windows).</div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- CZESC 1 — COMMUNITY / ENTERPRISE CLOUD                       -->
+<!-- ============================================================ -->
+
+<div class="section" id="cloud-1">
+  <div class="module-heading">Czesc 1 — UiPath Automation Cloud (Community / Enterprise Cloud)</div>
+
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Krok 1: Zaloguj sie do Orchestratora</div>
+    </div>
+    <div class="exercise-body">
+      <ol class="steps">
+        <li>Wejdz na <code>cloud.uipath.com</code></li>
+        <li>Zaloguj sie na swoje konto</li>
+        <li>Wybierz odpowiednia organizacje i tenanta</li>
+        <li>Otworz <strong>Orchestrator</strong></li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="cloud-2">
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Krok 2: Dodaj Machine Template<div class="goal">Machine Template to szablon, ktory pozwala polaczyc jedna lub wiecej maszyn fizycznych z Orchestratorem.</div></div>
+    </div>
+    <div class="exercise-body">
+      <ol class="steps">
+        <li>W Orchestratorze przejdz do: <strong>Tenant &rarr; Machines</strong></li>
+        <li>Kliknij <strong>Add Machine</strong> (lub <strong>+</strong>)</li>
+        <li>Wybierz typ:
+          <ul class="bullets" style="margin-top: 4px;">
+            <li><strong>Standard Machine</strong> — jedna maszyna, jeden klucz</li>
+            <li><strong>Machine Template</strong> — jeden szablon, wiele maszyn (zalecane)</li>
+          </ul>
+        </li>
+        <li>Podaj <strong>nazwe</strong> maszyny (np. <code>ROBOT-SERVER-01</code>)</li>
+        <li>Skopiuj wygenerowany <strong>Machine Key</strong> — bedziesz go potrzebowal do polaczenia robota</li>
+      </ol>
+      <div class="tip"><strong>Wskazowka:</strong> Machine Template jest zalecany — pozwala polaczyc wiele maszyn jednym szablonem i latwiej zarzadzac licencjami.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="cloud-3">
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Krok 3: Polacz UiPath Robot z Orchestratorem<div class="goal">Na maszynie, na ktorej zainstalowales UiPath Robot.</div></div>
+    </div>
+    <div class="exercise-body">
+      <ol class="steps">
+        <li>Otworz <strong>UiPath Assistant</strong> (ikona w zasobniku systemowym)</li>
+        <li>Kliknij <strong>Preferences</strong> (zebatka) &rarr; <strong>Orchestrator Settings</strong></li>
+        <li>Wprowadz:
+          <ul class="bullets" style="margin-top: 4px;">
+            <li><strong>Orchestrator URL:</strong> <code>https://cloud.uipath.com/{OrgName}/{TenantName}/orchestrator_</code></li>
+            <li><strong>Machine Key:</strong> skopiowany klucz z kroku 2</li>
+          </ul>
+        </li>
+        <li>Kliknij <strong>Connect</strong></li>
+        <li>Status powinien zmienic sie na <strong>Connected, Licensed</strong></li>
+      </ol>
+      <div class="theory-heading">Alternatywa — polaczenie przez wiersz polecen</div>
+<pre>cd "C:\Program Files\UiPath\Studio"
+UiRobot.exe connect --url https://cloud.uipath.com/OrgName/TenantName/orchestrator_ --key MACHINE_KEY</pre>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="cloud-4">
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Krok 4: Skonfiguruj Unattended Robot (konto)</div>
+    </div>
+    <div class="exercise-body">
+      <ol class="steps">
+        <li>W Orchestratorze przejdz do: <strong>Tenant &rarr; Folders</strong> &rarr; wybierz folder (lub stworz nowy)</li>
+        <li>Lub przejdz do: <strong>Tenant &rarr; Manage Access &rarr; Users</strong></li>
+        <li>Znajdz lub dodaj uzytkownika, ktory bedzie kontem robota</li>
+        <li>Przy uzytkowniku kliknij <strong>Edit</strong> &rarr; zakladka <strong>Unattended Robot</strong></li>
+        <li>Wlacz przelacznik <strong>Enable Unattended Robot</strong></li>
+        <li>Wypelnij pola:
+          <ul class="bullets" style="margin-top: 4px;">
+            <li><strong>Domain\Username:</strong> konto Windows na maszynie robota (np. <code>ROBOT-SERVER-01\RobotUser</code> lub <code>DOMENA\RobotUser</code>)</li>
+            <li><strong>Password:</strong> haslo do tego konta Windows</li>
+          </ul>
+        </li>
+      </ol>
+      <div class="warn"><strong>Wazne:</strong> To konto Windows musi istniec na maszynie i miec uprawnienie <strong>"Logowanie jako usluga"</strong> (Log on as a service). Robot uzyje tych danych do utworzenia sesji Windows na maszynie.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="cloud-5">
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Krok 5: Przypisz robota do folderu</div>
+    </div>
+    <div class="exercise-body">
+      <ol class="steps">
+        <li>W Orchestratorze przejdz do wybranego folderu</li>
+        <li><strong>Settings &rarr; Machines</strong> — przypisz Machine Template z kroku 2</li>
+        <li><strong>Settings &rarr; Users</strong> — przypisz uzytkownika z kontem Unattended z kroku 4</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="cloud-6">
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Krok 6: Opublikuj proces i stworz harmonogram</div>
+    </div>
+    <div class="exercise-body">
+      <ol class="steps">
+        <li>Z UiPath Studio: <strong>Publish</strong> &rarr; wybierz Orchestrator jako cel</li>
+        <li>W Orchestratorze: <strong>Automations &rarr; Processes</strong> &rarr; <strong>Add Process</strong> &rarr; wybierz pakiet</li>
+        <li><strong>Automations &rarr; Triggers</strong> &rarr; <strong>Add Trigger</strong>:
+          <ul class="bullets" style="margin-top: 4px;">
+            <li>Wybierz proces</li>
+            <li>Ustaw harmonogram (CRON lub kalendarz)</li>
+            <li>Wybierz konto/maszyne do uruchomienia</li>
+          </ul>
+        </li>
+        <li>Kliknij <strong>Save</strong></li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="cloud-7">
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Krok 7: Weryfikacja</div>
+    </div>
+    <div class="exercise-body">
+      <ol class="steps">
+        <li><strong>Monitoring &rarr; Jobs</strong> — sprawdz czy zadania sie uruchamiaja</li>
+        <li>Status maszyny: <strong>Tenant &rarr; Machines</strong> — powinna byc "Available"</li>
+        <li><strong>Monitoring &rarr; Robots</strong> — robot powinien miec status "Available"</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- CZESC 2 — ON-PREMISE                                          -->
+<!-- ============================================================ -->
+
+<div class="section" id="onprem-1">
+  <div class="module-heading">Czesc 2 — UiPath Orchestrator On-Premise</div>
+
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Krok 1: Zaloguj sie do Orchestratora</div>
+    </div>
+    <div class="exercise-body">
+      <ol class="steps">
+        <li>Otworz przegladarke i wejdz na adres swojego Orchestratora (np. <code>https://orchestrator.firma.pl</code>)</li>
+        <li>Zaloguj sie danymi administratora</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="onprem-2">
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Krok 2: Sprawdz licencje</div>
+    </div>
+    <div class="exercise-body">
+      <ol class="steps">
+        <li>Przejdz do: <strong>Tenant &rarr; License</strong></li>
+        <li>Upewnij sie, ze masz dostepne licencje <strong>Unattended</strong></li>
+        <li>Jesli nie — zaimportuj plik licencji lub aktywuj online</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="onprem-3">
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Krok 3: Dodaj maszyne</div>
+    </div>
+    <div class="exercise-body">
+      <ol class="steps">
+        <li>Przejdz do: <strong>Tenant &rarr; Machines</strong></li>
+        <li>Kliknij <strong>+</strong> (Add)</li>
+        <li>Wybierz <strong>Standard Machine</strong> lub <strong>Machine Template</strong></li>
+        <li>Podaj <strong>nazwe maszyny</strong> — musi odpowiadac nazwie hosta (hostname) maszyny fizycznej
+          <ul class="bullets" style="margin-top: 4px;">
+            <li>Sprawdz hostname: na maszynie robota uruchom <code>hostname</code> w CMD</li>
+          </ul>
+        </li>
+        <li>Skopiuj <strong>Machine Key</strong></li>
+      </ol>
+      <div class="warn"><strong>Uwaga On-Premise:</strong> W wersji On-Premise nazwa Standard Machine <strong>MUSI</strong> dokladnie odpowiadac hostname maszyny. W Machine Template nie ma tego ograniczenia.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="onprem-4">
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Krok 4: Zainstaluj i polacz UiPath Robot</div>
+    </div>
+    <div class="exercise-body">
+      <div class="label">Instalacja w trybie Service Mode</div>
+      <ol class="steps">
+        <li>Na maszynie robota zainstaluj <strong>UiPath Robot</strong> w trybie <strong>Service Mode</strong></li>
+        <li>Podczas instalacji wybierz: <strong>"Service Mode"</strong> (nie User Mode)</li>
+      </ol>
+      <div class="theory-heading">Instalacja przez wiersz polecen</div>
+<pre>UiPathStudio.msi ADDLOCAL=DesktopFeature,Robot,RegisterService INSTALL_TYPE=ServiceMode</pre>
+
+      <div class="label" style="margin-top: 14px;">Polaczenie z Orchestratorem</div>
+      <ol class="steps">
+        <li>Otworz UiPath Assistant &rarr; Preferences &rarr; Orchestrator Settings</li>
+        <li><strong>Orchestrator URL:</strong> <code>https://orchestrator.firma.pl</code></li>
+        <li><strong>Machine Key:</strong> klucz z kroku 3</li>
+        <li>Kliknij <strong>Connect</strong></li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="onprem-5">
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Krok 5: Stworz Unattended Robot</div>
+    </div>
+    <div class="exercise-body">
+      <div class="label">Metoda nowoczesna (wersja 2021.10+)</div>
+      <ol class="steps">
+        <li><strong>Tenant &rarr; Manage Access &rarr; Users</strong> &rarr; dodaj uzytkownika lub znajdz istniejacego</li>
+        <li>Edytuj uzytkownika &rarr; zakladka <strong>Unattended Robot</strong></li>
+        <li>Wlacz <strong>Enable Unattended Robot</strong></li>
+        <li>Podaj <strong>Domain\Username</strong> i <strong>Password</strong> konta Windows</li>
+      </ol>
+
+      <div class="label" style="margin-top: 14px;">Metoda klasyczna (starsze wersje Orchestratora)</div>
+      <ol class="steps">
+        <li>Przejdz do: <strong>Tenant &rarr; Robots</strong></li>
+        <li>Kliknij <strong>+</strong> (Add) &rarr; <strong>Standard Robot</strong></li>
+        <li>Wypelnij:
+          <ul class="bullets" style="margin-top: 4px;">
+            <li><strong>Machine:</strong> wybierz maszyne z kroku 3</li>
+            <li><strong>Name:</strong> nazwa robota (dowolna)</li>
+            <li><strong>Domain\Username:</strong> konto Windows (np. <code>SERWER\RobotSvc</code>)</li>
+            <li><strong>Password:</strong> haslo konta Windows</li>
+            <li><strong>Type:</strong> <strong>Unattended</strong></li>
+          </ul>
+        </li>
+        <li>Kliknij <strong>Create</strong></li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="onprem-6">
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Krok 6: Przypisz do folderu i stworz proces</div>
+    </div>
+    <div class="exercise-body">
+      <p>Identycznie jak w czesci Cloud (Krok 5 i 6 z czesci 1):</p>
+      <ol class="steps">
+        <li>Przypisz maszyne i uzytkownika do folderu</li>
+        <li>Opublikuj proces z UiPath Studio</li>
+        <li>Stworz Process i Trigger w Orchestratorze</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="onprem-7">
+  <div class="exercise-card">
+    <div class="exercise-title">
+      <div>Krok 7: Konfiguracja konta Windows</div>
+    </div>
+    <div class="exercise-body">
+      <p>Na maszynie robota upewnij sie, ze konto ma odpowiednie uprawnienia:</p>
+      <ol class="steps">
+        <li>Otworz: <code>secpol.msc</code> (Lokalna polityka zabezpieczen)</li>
+        <li>Przejdz do: <strong>Local Policies &rarr; User Rights Assignment</strong></li>
+        <li>Znajdz: <strong>"Log on as a service"</strong> (Logowanie jako usluga) &rarr; dodaj konto robota</li>
+        <li>Znajdz: <strong>"Allow log on locally"</strong> (Zezwalaj na logowanie lokalne) &rarr; dodaj konto robota</li>
+        <li>Jesli uzywasz Remote Desktop:
+          <ul class="bullets" style="margin-top: 4px;">
+            <li>Znajdz: <strong>"Allow log on through Remote Desktop Services"</strong> &rarr; dodaj konto robota</li>
+          </ul>
+        </li>
+      </ol>
+      <div class="warn"><strong>Wazne:</strong> Jesli maszyna jest w domenie Active Directory, te ustawienia moga byc nadpisywane przez Group Policy (GPO). Skontaktuj sie z administratorem domeny.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ROZWIAZYWANIE PROBLEMOW                                       -->
+<!-- ============================================================ -->
+
+<div class="section" id="troubleshoot">
+  <div class="module-heading">Rozwiazywanie problemow</div>
+
+  <div class="theory-box">
+    <div class="theory-heading">Robot nie laczy sie z Orchestratorem</div>
+    <table class="gen" style="margin-top: 8px;">
+      <tr><th>Problem</th><th>Rozwiazanie</th></tr>
+      <tr><td>Status: "Unavailable"</td><td>Sprawdz czy usluga <code>UiPath Robot</code> jest uruchomiona (<code>services.msc</code>)</td></tr>
+      <tr><td>Blad SSL/TLS</td><td>Sprawdz certyfikat Orchestratora; upewnij sie ze maszyna ufa CA</td></tr>
+      <tr><td>Blad 401 Unauthorized</td><td>Sprawdz Machine Key — wygeneruj nowy jesli trzeba</td></tr>
+      <tr><td>Blad polaczenia sieciowego</td><td>Sprawdz firewall — port 443 (HTTPS) musi byc otwarty</td></tr>
+    </table>
+
+    <div class="theory-heading">Robot polaczony ale zadania nie startuja</div>
+    <table class="gen" style="margin-top: 8px;">
+      <tr><th>Problem</th><th>Rozwiazanie</th></tr>
+      <tr><td>"No available robot"</td><td>Sprawdz czy robot jest przypisany do tego samego folderu co proces</td></tr>
+      <tr><td>"Robot is busy"</td><td>Inna praca jest w trakcie; poczekaj lub anuluj</td></tr>
+      <tr><td>"License expired"</td><td>Sprawdz licencje w Tenant &rarr; License</td></tr>
+      <tr><td>Blad logowania Windows</td><td>Sprawdz Domain\Username i Password w konfiguracji Unattended</td></tr>
+    </table>
+
+    <div class="theory-heading">Sesja Windows nie otwiera sie</div>
+    <div class="edu-list" style="margin-top: 8px;">
+      <div class="edu-item">Sprawdz uprawnienia konta: "Log on as a service", "Allow log on locally"</div>
+      <div class="edu-item">Sprawdz czy haslo konta nie wygaslo</div>
+      <div class="edu-item">Na Windows Server: sprawdz czy masz dostepne sesje RDP (domyslnie max 2)</div>
+      <div class="edu-item">Sprawdz: <code>secpol.msc</code> — czy nie ma polityki blokujacej</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- DOBRE PRAKTYKI                                                -->
+<!-- ============================================================ -->
+
+<div class="section" id="best-practices">
+  <div class="module-heading">Dobre praktyki</div>
+  <div class="theory-box">
+    <div class="edu-list">
+      <div class="edu-item"><strong>Dedykowane konto</strong> — stworz osobne konto Windows tylko dla robota (np. <code>svc_uipath_robot</code>)</div>
+      <div class="edu-item"><strong>Haslo bez wygasania</strong> — ustaw "Password never expires" dla konta robota (lub zarzadzaj przez Credential Store)</div>
+      <div class="edu-item"><strong>Service Mode</strong> — zawsze instaluj robota w trybie Service Mode dla Unattended</div>
+      <div class="edu-item"><strong>Machine Template</strong> — uzywaj Machine Template zamiast Standard Machine dla latwiejszego skalowania</div>
+      <div class="edu-item"><strong>Credential Store</strong> — przechowuj hasla w Orchestrator Credential Store zamiast wpisywac je recznie</div>
+      <div class="edu-item"><strong>Monitoring</strong> — skonfiguruj alerty w Orchestratorze (Alerts) na wypadek bledow</div>
+      <div class="edu-item"><strong>Rozdzielczosc ekranu</strong> — ustaw stala rozdzielczosc (np. 1920x1080) dla sesji robota, zeby selektory UI dzialaly poprawnie</div>
+      <div class="edu-item"><strong>High-DPI</strong> — wylacz skalowanie DPI (ustaw na 100%) na maszynie robota</div>
+      <div class="edu-item"><strong>Windows Update</strong> — zaplanuj aktualizacje poza godzinami pracy robota</div>
+      <div class="edu-item"><strong>Logi</strong> — monitoruj logi w Orchestratorze (Monitoring &rarr; Logs) i konfiguruj retencje</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCHEMAT PODSUMOWANIE                                          -->
+<!-- ============================================================ -->
+
+<div class="section" id="schemat">
+  <div class="module-heading">Schemat konfiguracji — podsumowanie</div>
+  <div class="theory-box">
+<pre>1. ORCHESTRATOR
+   ├── Dodaj Machine Template / Standard Machine
+   ├── Skopiuj Machine Key
+   ├── Dodaj/edytuj uzytkownika
+   │   └── Wlacz Unattended Robot (Domain\Username + Password)
+   └── Przypisz maszyne + uzytkownika do folderu
+
+2. MASZYNA ROBOTA
+   ├── Zainstaluj UiPath Robot (Service Mode)
+   ├── Polacz z Orchestratorem (URL + Machine Key)
+   ├── Skonfiguruj konto Windows (Log on as service)
+   └── Ustaw rozdzielczosc + wylacz DPI scaling
+
+3. URUCHOMIENIE
+   ├── Opublikuj proces z UiPath Studio
+   ├── Stworz Process w Orchestratorze
+   ├── Dodaj Trigger (harmonogram / kolejka)
+   └── Monitoruj w Jobs / Logs</pre>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="material-footer">
+  <img src="logo.png" alt="Robotivity" style="height:36px; vertical-align:middle; margin-bottom:6px;"><br>
+  Instrukcja przygotowana przez <strong>Robotivity&reg;</strong> — Autoryzowany Partner UiPath<br>
+  info@robotivity.pl &nbsp;&middot;&nbsp; www.Robotivity.pl &nbsp;&middot;&nbsp; tel.: +48 690 020 576
+</div>
+
+</main>
+
+<script>
+  const sections = document.querySelectorAll('.section[id]');
+  const navItems = document.querySelectorAll('.nav-item');
+
+  function onScroll() {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 80) current = s.id;
+    });
+    navItems.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  navItems.forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  function filterNav(query) {
+    const q = query.toLowerCase();
+    navItems.forEach(a => {
+      const match = a.textContent.toLowerCase().includes(q);
+      a.style.display = (q === '' || match) ? '' : 'none';
+    });
+    document.querySelectorAll('.nav-module, .nav-day').forEach(el => {
+      el.style.display = (q === '') ? '' : 'none';
+    });
+  }
+</script>
+</body>
+</html>
